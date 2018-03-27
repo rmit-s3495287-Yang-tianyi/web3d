@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Web3D tutorial 1</title>
+<link rel="stylesheet" type="text/css" href="../x3dom/x3dom.css"/>
+<script type="text/javascript" src="../x3dom/x3dom.js">
+    </script>
+<style type="text/css">
+body {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+<h1>X3DOM Tute1</h1>
+<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
+  <Scene> 
+    
+    <!-- 大坐标 -->
+    <Shape>
+      <IndexedLineSet
+      coordIndex=" 0 1 -1 0 2 -1 0 3 -1"
+      colorPerVertex="true"
+      colorIndex="0 0 -1 1 1 -1 2 2 -1">
+        <Coordinate point="0 0 0, 20 0 0, 0 20 0, 0 0 20"/>
+        <Color color="1 0 0, 0 1 0, 0 0 1"/>
+      </IndexedLineSet>
+    </Shape>
+    
+    <!-- 前臂 --> 
+    <!--旋转            形状            位置 -->
+    <Transform  DEF="box1"  >
+      <Transform  rotation='0 0 1 0' scale='2 0.5 1' translation='0 0 0'>
+        <Shape DEF="box">
+          <IndexedFaceSet solid='false' coordIndex='0 1  2 3  -1 4 5 6 7  -1 1 2 6 7  -1 0 3 5 4   -1 3 2 6 5  -1 0 1 7 4  -1 ' >
+            <Coordinate point=' 0 -1  1,
+   2 -1  1,
+   2  1  1,
+   0  1  1,
+   0 -1 -1,
+   0  1 -1,
+   2  1 -1,
+   2 -1 -1' />
+          </IndexedFaceSet>
+          <Appearance>
+             <ImageTexture url='./uv_grid.jpg'/>
+          </Appearance>
+        </Shape>
+      </Transform>
+      <!-- 小坐标 -->
+      <Shape DEF="line">
+        <IndexedLineSet
+      coordIndex=" 0 1 -1 0 2 -1 0 3 -1"
+      colorPerVertex="true"
+      colorIndex="0 0 -1 1 1 -1 2 2 -1">
+          <Coordinate point="2 0 0, 7 0 0, 2 5 0, 2 0 5"/>
+          <Color color="1 0 0, 0 1 0, 0 0 1"/>
+        </IndexedLineSet>
+      </Shape>
+      
+      <!-- 后臂 -->
+      <Transform DEF="box2" translation='4 0 0' >
+        <Transform  scale='2 0.5 1' >
+          <Shape USE="box"></Shape>
+        </Transform>
+        <!-- 后臂坐标 -->
+        <Shape USE="line"></Shape>
+      </Transform>
+    </Transform>
+    <TimeSensor DEF = "AngleTimer" cycleInterval = '10' loop = "true" enabled="true"/>
+    
+    <!--时间和关键帧属性-->
+    <OrientationInterpolator
+  DEF = "AngleInterpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 0, 0 0 1 1.5, 0 0 1 3, 0 0 1 4.5,0 0 1 6.3'
+/>
+    <ROUTE
+  fromNode = "AngleTimer"
+  fromField = "fraction_changed"
+  toNode = "AngleInterpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "AngleInterpolator"
+  fromField = "value_changed"
+  toNode = "box2"
+  toField = "set_rotation"
+ />
+    <TimeSensor DEF = "AngleTimer1" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "AngleInterpolator1"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 0, 0 0 1 1.5, 0 0 1 3, 0 0 1 4.5,0 0 1 6.3'
+/>
+    <ROUTE
+  fromNode = "AngleTimer1"
+  fromField = "fraction_changed"
+  toNode = "AngleInterpolator1"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "AngleInterpolator1"
+  fromField = "value_changed"
+  toNode = "box1"
+  toField = "set_rotation"
+ />
+  </Scene>
+</X3D>
+</body>
+</html>

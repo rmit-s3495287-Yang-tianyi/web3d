@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Web3D tutorial 1</title>
+<link rel="stylesheet" type="text/css" href="../x3dom/x3dom.css"/>
+<script type="text/javascript" src="../x3dom/x3dom.js">
+    </script>
+<style type="text/css">
+body {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+<h1>X3DOM Tute1</h1>
+<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
+  <Scene>     
+
+        <Shape DEF="box">
+          <IndexedFaceSet solid='false' coordIndex='0 1  2 3  -1 '>
+            <Coordinate point=' 0 0  0,
+			5 0 0,
+			5 0 3,
+			0 0 3'/>
+   
+          </IndexedFaceSet>
+           <Appearance> 
+    <Material diffuseColor ='0 0 1'/> 
+  </Appearance> 
+        </Shape>
+
+  </Scene>
+</X3D>
+</body>
+</html>
