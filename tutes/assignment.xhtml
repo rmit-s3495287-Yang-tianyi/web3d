@@ -14,7 +14,7 @@ body {
 </head>
 <body>
 <h1>Assignment 1</h1>
-<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px"> 
+<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
   <!-- 水面 -->
   <Scene>
     <Shape>
@@ -75,7 +75,7 @@ body {
             <Material diffuseColor ='0 1 0'/>
           </Appearance>
         </Shape>
-        
+
         <!-- 下颚 -->
         <Transform  rotation='1 0 0 3.15'>
           <Transform DEF="mouse" rotation='0 0 1 0.3'>
@@ -99,7 +99,7 @@ body {
           <Shape USE="eye"></Shape>
         </Transform>
       </Transform>
-      
+
       <!-- 右前肢 -->
       <Transform DEF="RArm" rotation='0 0 1 -1.575' translation='0.8 0 0.58'>
         <Shape DEF="Octahedron">
@@ -143,7 +143,7 @@ body {
                 <Shape USE="line"></Shape>
               </Transform>
             </Transform>
-            
+
             <!-- 右前臂 -->
             <Transform  translation='0 0 1.16'>
               <Shape USE="Octahedron"></Shape>
@@ -152,39 +152,62 @@ body {
           </Transform>
         </Transform>
       </Transform>
-      
-      <!--HIP! --> 
+
+      <!--HIP! -->
       <!--RL HIP-->
-      <Transform rotation='0 1 0 1.575' translation='-1 0 0'>
+      <Transform  rotation='0 1 0 1.575' translation='-1 0 0'>
+      <Transform DEF='RLHIP'>
         <Shape USE="Octahedron"></Shape>
         <Shape USE="line"></Shape>
         <!-- alter angle "2.214"-->
         <Transform rotation='0 0 1 -2.214' translation='1 0 0'>
+        <Transform DEF="RLKnee" >
           <Shape USE="Octahedron"></Shape>
           <Shape USE="line"></Shape>
+
+
           <Transform rotation='0 0 -1 -2.214' translation='1 0 0'>
+            <Transform DEF="RLFoot">
             <Shape USE="Octahedron"></Shape>
             <Shape USE="line"></Shape>
             <Transform rotation='0 1 0 -1.575' translation='1 0 0'>
+              <Transform DEF="RLToe">
               <Shape USE="toes"></Shape>
               <Shape USE="line"></Shape>
+              </Transform>
             </Transform>
           </Transform>
         </Transform>
+
+        </Transform>
       </Transform>
-      
+    </Transform>
+    </Transform>
+
+
+
+
+
       <!-- RR HIP-->
       <Transform rotation='0 1 0 -1.575' translation='-1 0 0'>
+        <Transform DEF='RRHIP'>
         <Shape USE="Octahedron"></Shape>
         <Shape USE="line"></Shape>
         <!-- alter angle "2.214"-->
         <Transform rotation='0 0 1 -2.214' translation='1 0 0'>
+          <Transform DEF="RRKnee" >
           <Shape USE="Octahedron"></Shape>
           <Shape USE="line"></Shape>
+
+
           <Transform rotation='0 0 -1 -2.214' translation='1 0 0'>
+            <Transform DEF="RRFoot">
             <Shape USE="Octahedron"></Shape>
             <Shape USE="line"></Shape>
+
+
             <Transform rotation='0 1 0 1.575' translation='1 0 0'>
+              <Transform DEF="RRToe">
               <Shape USE="toes"></Shape>
               <Shape USE="line"></Shape>
             </Transform>
@@ -192,10 +215,166 @@ body {
         </Transform>
       </Transform>
     </Transform>
+  </Transform>
+
+  </Transform>
+  </Transform>
+
+
+    </Transform>
+
+    <TimeSensor DEF = "TimerOflegs" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "InterOfleg"
+  key = '0 0.25 0.5 0.75 1'
+  keyValue = '0 -1 1 0,0 -1 1 -1,0 -1 1 -1,0 -1 1 -1,0 -1 1 0'
+/>
+    <ROUTE
+  fromNode = "TimerOflegs"
+  fromField = "fraction_changed"
+  toNode = "InterOfleg"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "InterOfleg"
+  fromField = "value_changed"
+  toNode = "RLHIP"
+  toField = "set_rotation"
+ />
+
+
+ <OrientationInterpolator
+DEF = "InterOfleg2"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '0 1 1 0, 0 1 1 -1, 0 1 1 -1, 0 1 1 -1, 0 1 1 0'
+/>
+ <ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfleg2"
+toField = "set_fraction"
+/>
+ <ROUTE
+fromNode = "InterOfleg2"
+fromField = "value_changed"
+toNode = "RRHIP"
+toField = "set_rotation"
+/>
+
+
+ <OrientationInterpolator
+DEF = "InterOfKnee"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '0 0 1 0,0 0 1 1.57,0 0 1 1.57,0 0 1 1.57,0 0 1 0'
+/>
+ <ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfKnee"
+toField = "set_fraction"
+/>
+ <ROUTE
+fromNode = "InterOfKnee"
+fromField = "value_changed"
+toNode = "RLKnee"
+toField = "set_rotation"
+/>
+
+<OrientationInterpolator
+DEF = "InterOfKnee2"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '0 0 1 0,0 0 1 1.57,0 0 1 1.57,0 0 1 1.57,0 0 1 0'
+/>
+<ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfKnee2"
+toField = "set_fraction"
+/>
+<ROUTE
+fromNode = "InterOfKnee2"
+fromField = "value_changed"
+toNode = "RRKnee"
+toField = "set_rotation"
+/>
+
+
+
+<OrientationInterpolator
+DEF = "InterOfFoot"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '0 0 1 0,0 0 1 -1.57,0 0 1 -1.57,0 0 1 -1.57,0 0 1 0'
+/>
+<ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfFoot"
+toField = "set_fraction"
+/>
+<ROUTE
+fromNode = "InterOfFoot"
+fromField = "value_changed"
+toNode = "RLFoot"
+toField = "set_rotation"
+/>
+<OrientationInterpolator
+DEF = "InterOfFoot2"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '0 0 1 0,0 0 1 -1.57,0 0 1 -1.57,0 0 1 -1.57,0 0 1 0'
+/>
+<ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfFoot2"
+toField = "set_fraction"
+/>
+<ROUTE
+fromNode = "InterOfFoot2"
+fromField = "value_changed"
+toNode = "RRFoot"
+toField = "set_rotation"
+/>
+
+<OrientationInterpolator
+DEF = "InterOfToe"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '-1 0 1 0,-1 0 1 -1.57,-1 0 1 -1.57,-1 0 1 -1.57,-1 0 1 0'
+/>
+<ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfToe"
+toField = "set_fraction"
+/>
+<ROUTE
+fromNode = "InterOfToe"
+fromField = "value_changed"
+toNode = "RLToe"
+toField = "set_rotation"
+/>
+
+<OrientationInterpolator
+DEF = "InterOfToe2"
+key = '0 0.25 0.5 0.75 1'
+keyValue = '1 0 1 0,1 0 1 -1.57,1 0 1 -1.57,1 0 1 -1.57,1 0 1 0'
+/>
+<ROUTE
+fromNode = "TimerOflegs"
+fromField = "fraction_changed"
+toNode = "InterOfToe2"
+toField = "set_fraction"
+/>
+<ROUTE
+fromNode = "InterOfToe2"
+fromField = "value_changed"
+toNode = "RRToe"
+toField = "set_rotation"
+/>
+
     <TimeSensor DEF = "Timer" cycleInterval = '5' loop = "true" enabled="true"/>
     <PositionInterpolator
   DEF = "Interpolator"
-  key = '0 0.25 0.5 0.75 1'            
+  key = '0 0.25 0.5 0.75 1'
   keyValue = '-4 0 0,-2 1 0,0 2 0,2 1 0,4 0 0'
 />
     <ROUTE
@@ -213,7 +392,7 @@ body {
     <TimeSensor DEF = "Timer1" cycleInterval = '5' loop = "true" enabled="true"/>
     <OrientationInterpolator
   DEF = "Interpolator"
-  key = '0 0.25 0.5 0.75 1'            
+  key = '0 0.25 0.5 0.75 1'
   keyValue = '0 0 1 0,0 0 1 0,0 0 1 0.6,0 0 1 0,0 0 1 0'
 />
     <ROUTE
@@ -231,7 +410,7 @@ body {
     <TimeSensor DEF = "Timer2" cycleInterval = '5' loop = "true" enabled="true"/>
     <OrientationInterpolator
   DEF = "Interpolator"
-  key = '0 0.25 0.5 0.75 1'            
+  key = '0 0.25 0.5 0.75 1'
   keyValue = '0 0 1 -1.575,0 0 1 -0.9,0 0 1 -0.9,0 0 1 -0.9,0 0 1 -1.575'
 />
     <ROUTE
@@ -249,7 +428,7 @@ body {
     <TimeSensor DEF = "Timer3" cycleInterval = '5' loop = "true" enabled="true"/>
     <OrientationInterpolator
   DEF = "Interpolator"
-  key = '0 0.25 0.5 0.75 1'            
+  key = '0 0.25 0.5 0.75 1'
   keyValue = '0 0 1 1.575,0 0 1 0.6,0 0 1 0.6,0 0 1 0.6,0 0 1 1.575'
 />
     <ROUTE
@@ -267,7 +446,7 @@ body {
     <TimeSensor DEF = "Timer4" cycleInterval = '5' loop = "true" enabled="true"/>
     <OrientationInterpolator
   DEF = "Interpolator"
-  key = '0 0.25 0.5 0.75 1'            
+  key = '0 0.25 0.5 0.75 1'
   keyValue = '0 0 1 0,0 0 1 0.3,0 0 1 0.3,0 0 1 0.3,0 0 1 0'
 />
     <ROUTE
