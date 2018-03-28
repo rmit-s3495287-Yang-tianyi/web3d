@@ -14,7 +14,7 @@ body {
 </head>
 <body>
 <h1>Assignment 1</h1>
-<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px"> 
+<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
   <!-- 水面 -->
   <Scene>
     <Shape>
@@ -71,7 +71,7 @@ body {
             <Material diffuseColor ='0 1 0'/>
           </Appearance>
         </Shape>
-        
+
         <!-- 下颚 -->
         <Transform  rotation='1 0 0 3.15'>
           <Transform  rotation='0 0 1 0.3'>
@@ -95,7 +95,7 @@ body {
             <Shape USE="eye"></Shape>
           </Transform>
       </Transform>
-      
+
       <!-- 右前肢 -->
       <Transform  rotation='0 0 1 -1.575' translation='0.8 0 0.58'>
         <Shape DEF="Octahedron">
@@ -147,6 +147,46 @@ body {
           </Transform>
         </Transform>
       </Transform>
+
+      <!--HIP! -->
+      <!--RL HIP-->
+      <Transform rotation='0 1 0 1.575' translation='-1 0 0'>
+        <Shape USE="Octahedron"></Shape>
+        <Shape USE="line"></Shape>
+        <!-- alter angle "2.214"-->
+        <Transform rotation='0 0 1 -2.214' translation='1 0 0'>
+          <Shape USE="Octahedron"></Shape>
+          <Shape USE="line"></Shape>
+          <Transform rotation='0 0 -1 -2.214' translation='1 0 0'>
+            <Shape USE="Octahedron"></Shape>
+            <Shape USE="line"></Shape>
+            <Transform rotation='0 1 0 -1.575' translation='1 0 0'>
+              <Shape USE="toes"></Shape>
+              <Shape USE="line"></Shape>
+            </Transform>
+          </Transform>
+        </Transform>
+      </Transform>
+
+      <!-- RR HIP-->
+      <Transform rotation='0 1 0 -1.575' translation='-1 0 0'>
+        <Shape USE="Octahedron"></Shape>
+        <Shape USE="line"></Shape>
+        <!-- alter angle "2.214"-->
+        <Transform rotation='0 0 1 -2.214' translation='1 0 0'>
+          <Shape USE="Octahedron"></Shape>
+          <Shape USE="line"></Shape>
+          <Transform rotation='0 0 -1 -2.214' translation='1 0 0'>
+            <Shape USE="Octahedron"></Shape>
+            <Shape USE="line"></Shape>
+            <Transform rotation='0 1 0 1.575' translation='1 0 0'>
+              <Shape USE="toes"></Shape>
+              <Shape USE="line"></Shape>
+            </Transform>
+          </Transform>
+        </Transform>
+      </Transform>
+
     </Transform>
   </Scene>
 </X3D>
