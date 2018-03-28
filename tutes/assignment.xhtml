@@ -14,15 +14,15 @@ body {
 </head>
 <body>
 <h1>Assignment 1</h1>
-<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
+<X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px"> 
   <!-- 水面 -->
   <Scene>
     <Shape>
       <IndexedFaceSet solid='false' coordIndex='0 1 2 3 -1'>
-        <Coordinate point=' -5 -1 -3,
-			5 -1 -3,
-			5 -1 3,
-			-5 -1 3'/>
+        <Coordinate point=' -7 -1 -3,
+			7 -1 -3,
+			7 -1 3,
+			-7 -1 3'/>
       </IndexedFaceSet>
       <Appearance>
         <Material diffuseColor ='0 0 1' transparency='0.5'/>
@@ -41,7 +41,7 @@ body {
       </Shape>
     </Transform>
     <!-- 身体 -->
-    <Transform>
+    <Transform DEF="body">
       <Shape>
 
         <Appearance>
@@ -75,10 +75,10 @@ body {
             <Material diffuseColor ='0 1 0'/>
           </Appearance>
         </Shape>
-
+        
         <!-- 下颚 -->
         <Transform  rotation='1 0 0 3.15'>
-          <Transform  rotation='0 0 1 0.3'>
+          <Transform DEF="mouse" rotation='0 0 1 0.3'>
             <Shape USE="head"></Shape>
             <Transform  rotation='1 0 0 -3.15' >
               <Shape USE="line"></Shape>
@@ -95,13 +95,13 @@ body {
           </Shape>
         </Transform>
         <!-- 左眼 -->
-          <Transform scale='0.1 0.1 0.1' translation='0.7 0 -0.2'>
-            <Shape USE="eye"></Shape>
-          </Transform>
+        <Transform scale='0.1 0.1 0.1' translation='0.7 0 -0.2'>
+          <Shape USE="eye"></Shape>
+        </Transform>
       </Transform>
-
+      
       <!-- 右前肢 -->
-      <Transform  rotation='0 0 1 -1.575' translation='0.8 0 0.58'>
+      <Transform DEF="RArm" rotation='0 0 1 -1.575' translation='0.8 0 0.58'>
         <Shape DEF="Octahedron">
           <IndexedFaceSet solid='false' coordIndex='0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 1 -1 5 1 2 -1 5 2 3 -1 5 3 4 -1 5 4 1 -1 '>
             <Coordinate point=' 0.5 0.25 0,
@@ -121,11 +121,11 @@ body {
           <Shape USE="Octahedron"></Shape>
           <Shape USE="line"></Shape>
           <!-- 左前臂 -->
-          <Transform rotation='0 0 1 1.575' translation='1 0 0'>
+          <Transform DEF="LArm" rotation='0 0 1 1.575' translation='1 0 0'>
             <Shape USE="Octahedron"></Shape>
             <Shape USE="line"></Shape>
             <!-- 左前脚-->
-            <Transform  translation='1 0 0'>
+            <Transform DEF="LToes" translation='1 0 0'>
               <Shape DEF="toes">
                 <IndexedFaceSet solid='false' coordIndex='0 1 2 -1'>
                   <Coordinate point=' 0 0 0,
@@ -137,22 +137,23 @@ body {
                 </Appearance>
               </Shape>
               <Shape USE="line"></Shape>
+              <!-- 右前脚 -->
+              <Transform  translation='0 0 1.16'>
+                <Shape USE="toes"> </Shape>
+                <Shape USE="line"></Shape>
+              </Transform>
+            </Transform>
+            
+            <!-- 右前臂 -->
+            <Transform  translation='0 0 1.16'>
+              <Shape USE="Octahedron"></Shape>
+              <Shape USE="line"></Shape>
             </Transform>
           </Transform>
         </Transform>
-        <!-- 右前臂 -->
-        <Transform rotation='0 0 1 1.575' translation='1 0 0'>
-          <Shape USE="Octahedron"></Shape>
-          <Shape USE="line"></Shape>
-          <!-- 右前脚 -->
-          <Transform  translation='1 0 0'>
-            <Shape USE="toes"> </Shape>
-            <Shape USE="line"></Shape>
-          </Transform>
-        </Transform>
       </Transform>
-
-      <!--HIP! -->
+      
+      <!--HIP! --> 
       <!--RL HIP-->
       <Transform rotation='0 1 0 1.575' translation='-1 0 0'>
         <Shape USE="Octahedron"></Shape>
@@ -171,7 +172,7 @@ body {
           </Transform>
         </Transform>
       </Transform>
-
+      
       <!-- RR HIP-->
       <Transform rotation='0 1 0 -1.575' translation='-1 0 0'>
         <Shape USE="Octahedron"></Shape>
@@ -190,8 +191,97 @@ body {
           </Transform>
         </Transform>
       </Transform>
-
     </Transform>
+    <TimeSensor DEF = "Timer" cycleInterval = '5' loop = "true" enabled="true"/>
+    <PositionInterpolator
+  DEF = "Interpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '-4 0 0,-2 1 0,0 2 0,2 1 0,4 0 0'
+/>
+    <ROUTE
+  fromNode = "Timer"
+  fromField = "fraction_changed"
+  toNode = "Interpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+   fromNode = "Interpolator"
+  fromField = "value_changed"
+  toNode = "body"
+  toField = "set_translation"
+ />
+    <TimeSensor DEF = "Timer1" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "Interpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 0,0 0 1 0,0 0 1 0.6,0 0 1 0,0 0 1 0'
+/>
+    <ROUTE
+  fromNode = "Timer1"
+  fromField = "fraction_changed"
+  toNode = "Interpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "Interpolator"
+  fromField = "value_changed"
+  toNode = "mouse"
+  toField = "set_rotation"
+ />
+    <TimeSensor DEF = "Timer2" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "Interpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 -1.575,0 0 1 -0.9,0 0 1 -0.9,0 0 1 -0.9,0 0 1 -1.575'
+/>
+    <ROUTE
+  fromNode = "Timer2"
+  fromField = "fraction_changed"
+  toNode = "Interpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "Interpolator"
+  fromField = "value_changed"
+  toNode = "RArm"
+  toField = "set_rotation"
+ />
+    <TimeSensor DEF = "Timer3" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "Interpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 1.575,0 0 1 0.6,0 0 1 0.6,0 0 1 0.6,0 0 1 1.575'
+/>
+    <ROUTE
+  fromNode = "Timer3"
+  fromField = "fraction_changed"
+  toNode = "Interpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "Interpolator"
+  fromField = "value_changed"
+  toNode = "LArm"
+  toField = "set_rotation"
+ />
+    <TimeSensor DEF = "Timer4" cycleInterval = '5' loop = "true" enabled="true"/>
+    <OrientationInterpolator
+  DEF = "Interpolator"
+  key = '0 0.25 0.5 0.75 1'            
+  keyValue = '0 0 1 0,0 0 1 0.3,0 0 1 0.3,0 0 1 0.3,0 0 1 0'
+/>
+    <ROUTE
+  fromNode = "Timer4"
+  fromField = "fraction_changed"
+  toNode = "Interpolator"
+  toField = "set_fraction"
+ />
+    <ROUTE
+  fromNode = "Interpolator"
+  fromField = "value_changed"
+  toNode = "LToes"
+  toField = "set_rotation"
+ />
   </Scene>
 </X3D>
 </body>
