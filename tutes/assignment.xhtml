@@ -189,10 +189,6 @@ body {
     </Transform>
     </Transform>
 
-
-
-
-
       <!-- RR HIP-->
       <Transform rotation='0 1 0 -1.575' translation='-1 0 0'>
         <Transform DEF='RRHIP'>
@@ -224,8 +220,6 @@ body {
 
   </Transform>
   </Transform>
-
-
     </Transform>
 
     <TimeSensor DEF = "TimerOflegs" cycleInterval = '5' loop = "true" enabled="false"/>
@@ -343,8 +337,9 @@ toField = "set_rotation"
 <OrientationInterpolator
 DEF = "InterOfToe"
 key = '0 0.25 0.5 0.75 1'
-keyValue = '-1 0 1 0,-1 0 1 -1.57,-1 0 1 -1.57,-1 0 1 -1.57,-1 0 1 0'
+keyValue = '1 -1 0 0,1 -1 0 1,1 -1 0 1,1 -1 0 1,1 -1 0 0'
 />
+
 <ROUTE
 fromNode = "TimerOflegs"
 fromField = "fraction_changed"
@@ -361,7 +356,7 @@ toField = "set_rotation"
 <OrientationInterpolator
 DEF = "InterOfToe2"
 key = '0 0.25 0.5 0.75 1'
-keyValue = '1 0 1 0,1 0 1 -1.57,1 0 1 -1.57,1 0 1 -1.57,1 0 1 0'
+keyValue = '1 -1 0 0,1 -1 0 -1,1 -1 0 -1,1 -1 0 -1,1 -1 0 0'
 />
 <ROUTE
 fromNode = "TimerOflegs"
@@ -376,7 +371,7 @@ toNode = "RRToe"
 toField = "set_rotation"
 />
 
-   
+
     <PositionInterpolator
   DEF = "Interpolator"
   key = '0 0.25 0.5 0.75 1'
@@ -394,14 +389,14 @@ toField = "set_rotation"
   toNode = "body"
   toField = "set_translation"
  />
-   
-   <ROUTE                                                                  
-  fromNode='StartStop'                                                 
-  fromField='isActive'                                               
-  toNode='TimerOflegs'                                                
-  toField='enabled'                                                  
+
+   <ROUTE
+  fromNode='StartStop'
+  fromField='isActive'
+  toNode='TimerOflegs'
+  toField='enabled'
 />
-    
+
     <OrientationInterpolator
   DEF = "Interpolator1"
   key = '0 0.25 0.5 0.75 1'
@@ -419,7 +414,7 @@ toField = "set_rotation"
   toNode = "mouse"
   toField = "set_rotation"
  />
-   
+
     <OrientationInterpolator
   DEF = "Interpolator2"
   key = '0 0.25 0.5 0.75 1'
@@ -437,7 +432,7 @@ toField = "set_rotation"
   toNode = "RArm"
   toField = "set_rotation"
  />
-   
+
     <OrientationInterpolator
   DEF = "Interpolator3"
   key = '0 0.25 0.5 0.75 1'
@@ -455,7 +450,7 @@ toField = "set_rotation"
   toNode = "LArm"
   toField = "set_rotation"
  />
-   
+
     <OrientationInterpolator
   DEF = "Interpolator4"
   key = '0 0.25 0.5 0.75 1'
