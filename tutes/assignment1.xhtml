@@ -1,3 +1,4 @@
+<!-- s3623409 Yang Bo s3495287 Tianyi Yang -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -15,7 +16,7 @@ body {
 <body>
 <h1>Assignment 1</h1>
 <X3D xmlns="http://www.web3d.org/specifications/x3d-namespace" width="400px" height="400px">
-  <!-- 水面 -->
+  <!-- water -->
   <Scene>
     <Shape>
       <IndexedFaceSet solid='false' coordIndex='0 1 2 3 -1 4 5 6 7 -1 0 1 5 4 -1 1 2 6 5 -1 2 3 7 6 -1 0 3 7 4 -1'>
@@ -44,7 +45,7 @@ body {
         </IndexedLineSet>
       </Shape>
     </Transform>
-    <!-- 身体 -->
+    <!-- body -->
     <Transform DEF="body">
      	 <TouchSensor DEF='StartStop'/>
       <Shape>
@@ -66,7 +67,7 @@ body {
 
       </Shape>
       <Shape USE="line"></Shape>
-      <!-- 头 -->
+      <!-- head -->
       <Transform  translation='0.8 0 0'>
         <Shape DEF="head">
           <IndexedFaceSet solid='false' coordIndex='0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 1 -1 1 2 3 4 -1 '>
@@ -81,7 +82,7 @@ body {
           </Appearance>
         </Shape>
 
-        <!-- 下颚 -->
+        <!-- mandible -->
         <Transform  rotation='1 0 0 3.15'>
           <Transform DEF="mouse" rotation='0 0 1 0.3'>
             <Shape USE="head"></Shape>
@@ -90,7 +91,7 @@ body {
             </Transform>
           </Transform>
         </Transform>
-        <!-- 右眼 -->
+        <!-- Reye -->
         <Transform scale='0.1 0.1 0.1' translation='0.7 0 0.2'>
           <Shape DEF='eye'>
             <Sphere/>
@@ -99,13 +100,13 @@ body {
             </Appearance>
           </Shape>
         </Transform>
-        <!-- 左眼 -->
+        <!-- Leye -->
         <Transform scale='0.1 0.1 0.1' translation='0.7 0 -0.2'>
           <Shape USE="eye"></Shape>
         </Transform>
       </Transform>
 
-      <!-- 右前肢 -->
+      <!-- Right forelimb -->
       <Transform DEF="RArm" rotation='0 0 1 -1.575' translation='0.8 0 0.58'>
         <Shape DEF="Octahedron">
           <IndexedFaceSet solid='false' coordIndex='0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 1 -1 5 1 2 -1 5 2 3 -1 5 3 4 -1 5 4 1 -1 '>
@@ -121,15 +122,15 @@ body {
           </Appearance>
         </Shape>
         <Shape USE="line"></Shape>
-        <!-- 左前肢 -->
+        <!-- Left forelimb -->
         <Transform translation='0 0 -1.16'>
           <Shape USE="Octahedron"></Shape>
           <Shape USE="line"></Shape>
-          <!-- 左前臂 -->
+          <!-- Left arm -->
           <Transform DEF="LArm" rotation='0 0 1 1.575' translation='1 0 0'>
             <Shape USE="Octahedron"></Shape>
             <Shape USE="line"></Shape>
-            <!-- 左前脚-->
+            <!-- Left foot-->
             <Transform DEF="LToes" translation='1 0 0'>
               <Shape DEF="toes">
                 <IndexedFaceSet solid='false' coordIndex='0 1 2 -1'>
@@ -142,14 +143,14 @@ body {
                 </Appearance>
               </Shape>
               <Shape USE="line"></Shape>
-              <!-- 右前脚 -->
+              <!-- Right foot -->
               <Transform  translation='0 0 1.16'>
                 <Shape USE="toes"> </Shape>
                 <Shape USE="line"></Shape>
               </Transform>
             </Transform>
 
-            <!-- 右前臂 -->
+            <!-- Right forelimb  -->
             <Transform  translation='0 0 1.16'>
               <Shape USE="Octahedron"></Shape>
               <Shape USE="line"></Shape>
