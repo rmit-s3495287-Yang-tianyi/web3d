@@ -8,6 +8,7 @@ body=createbody();
 
 
 var head=createOctahedron();
+var neck = new THREE.Object3D();
 body.add(head);
 body.position.y=1;
 scene.add(body);
