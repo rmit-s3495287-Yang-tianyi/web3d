@@ -1,8 +1,3 @@
-/**
- * cube.js 
- * A simple Three.js program which draws a cube
- */
-
 var scene;
 var camera;
 var renderer;
@@ -17,7 +12,7 @@ light.position.set(0, 1, 0);
 var evlight  = new THREE.AmbientLight(0x404040);
 scene.add(evlight);
 scene.add(light);
-scene.add(createPentagonalBipyramid(0.5,0x00ff00));
+scene.add(createPentagonalBipyramid(0x00ff00));
 scene.add(createAxes(5));
 
 
@@ -54,33 +49,12 @@ function init(){
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000); 
 	camera.position.z = 2;
-	//var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setClearColor(0x404040, 1);
 	document.body.appendChild(renderer.domElement); 
 }
-//function createCube(){
-//	var geometry = new THREE.Geometry();
-//geometry.vertices.push(new THREE.Vector3(-1, -1, 0));
-//geometry.vertices.push(new THREE.Vector3(1, -1, 0));
-//geometry.vertices.push(new THREE.Vector3(1, 1, 0));
-//geometry.vertices.push(new THREE.Vector3(-1, 1, 0));
-//geometry.faces.push(new THREE.Face3(0, 1, 2));
-//geometry.faces.push(new THREE.Face3(0, 2, 3));
-//geometry.computeFaceNormals();
-//var material = new THREE.MeshBasicMaterial({color: 0xffff00}); 
-//object = new THREE.Mesh(geometry, material); 
-//return object;
-//}
-function createCube(color1){
-	
-	var geometry = new THREE.BoxGeometry(2, 1, 1); 
-	var material = new THREE.MeshBasicMaterial({color:color1}); 
-	var obj = new THREE.Mesh(geometry, material); 
-	obj.add(createAxes(3));
-	return obj;
-}
+
 function createAxes(length){
   var geometry = new THREE.Geometry();
   geometry.vertices.push(new THREE.Vector3(0, 0, 0));
@@ -144,7 +118,7 @@ function animate() {
   }
 
   // returns pentagonal bipyramid (decahedron) object
-  function createPentagonalBipyramid(size, colors){
+  function createPentagonalBipyramid(colors){
 	  
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(new THREE.Vector3(0,0.5,0));
@@ -185,8 +159,3 @@ function animate() {
   // Uses the other functions to create the frog
   function createFrog(material){}
     
-//function animate(){
-//  renderer.render(scene, camera); 
-//  object.rotation.z += 2 * Math.PI / 360;
-//  requestAnimationFrame(animate)
-//}
