@@ -30,7 +30,14 @@ elbow.add(createAxes(3));
 scene.add(shoulder);
 scene.add(createAxes(5));
 
+light = new THREE.AmbientLight(0xaaf123); 
+scene.add(light);
 
+var keys = [0, 2, 4, 5, 6];
+var values = [0, 3, 5, 7, 8];
+var clock = new THREE.Clock();
+clock.start();
+console.log(clock.getElapsedTime());
 
 renderer.render(scene, camera); 
 var controls = new THREE.TrackballControls(camera);
@@ -40,7 +47,7 @@ animate();
 
 
 document.onkeydown = handleKeyDown;
-document.onkeyup = handleKeyUp;
+
 function handleKeyDown(event)
 {
     switch (event.keyCode) {
@@ -86,7 +93,8 @@ function init(){
 function createCube(color1){
 	
 	var geometry = new THREE.BoxGeometry(2, 1, 1); 
-	var material = new THREE.MeshBasicMaterial({color:color1}); 
+	var material = new THREE.MeshPhongMaterial({color:color1,specular:0xffffff});
+	//var material = new THREE.MeshBasicMaterial({color:color1}); 
 	var obj = new THREE.Mesh(geometry, material); 
 	obj.add(createAxes(3));
 	return obj;
