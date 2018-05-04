@@ -17,7 +17,7 @@ light.position.set(0, 1, 0);
 var evlight  = new THREE.AmbientLight(0x404040);
 scene.add(evlight);
 scene.add(light);
-scene.add(createSquareBipyramid(0.5, 0.25, 0.25, 0xaadfff));
+scene.add(createPentagonalBipyramid(0.5,0x00ff00));
 scene.add(createAxes(5));
 
 
@@ -111,15 +111,15 @@ function animate() {
 }
 
   // returns square bipyramid (octahedron) object
-  function createSquareBipyramid(sizeX, sizeY, sizeZ, colors){
+  function createSquareBipyramid(size, colors){
 	var geometry = new THREE.Geometry();
-	geometry.vertices.push(new THREE.Vector3(sizeX, 0, 0));
-	geometry.vertices.push(new THREE.Vector3(0, sizeY, 0));
-	geometry.vertices.push(new THREE.Vector3(0, 0, sizeZ));
+	geometry.vertices.push(new THREE.Vector3(0.5, 0, 0));
+	geometry.vertices.push(new THREE.Vector3(0, 0.25, 0));
+	geometry.vertices.push(new THREE.Vector3(0, 0, 0.25));
 	
-	geometry.vertices.push(new THREE.Vector3(-sizeX, 0, 0));
-	geometry.vertices.push(new THREE.Vector3(0, -sizeY, 0));
-	geometry.vertices.push(new THREE.Vector3(0, 0, -sizeZ));
+	geometry.vertices.push(new THREE.Vector3(-0.5, 0, 0));
+	geometry.vertices.push(new THREE.Vector3(0, -0.25, 0));
+	geometry.vertices.push(new THREE.Vector3(0, 0, -0.25));
 	
 	geometry.faces.push(new THREE.Face3(0, 1, 2));
 	
@@ -136,7 +136,7 @@ function animate() {
 	
 	
 	geometry.computeFaceNormals();
-	var material = new THREE.MeshLambertMaterial({color: 0x00ff00});
+	var material = new THREE.MeshLambertMaterial({color: colors});
 	var object = new THREE.Mesh(geometry, material); 
 	object.add(createAxes(3));
 	return object;
@@ -144,7 +144,31 @@ function animate() {
   }
 
   // returns pentagonal bipyramid (decahedron) object
-  function createPentagonalBipyramid(sizeX, sizeY, sizeZ, material){}
+  function createPentagonalBipyramid(size, colors){
+	  
+	var geometry = new THREE.Geometry();
+	geometry.vertices.push(new THREE.Vector3(0,0.5,0));
+	geometry.vertices.push(new THREE.Vector3(0.8,0,-0.58));
+	geometry.vertices.push(new THREE.Vector3(0.8,0,0.58));
+	geometry.vertices.push(new THREE.Vector3(-0.3,0,0.95));
+	geometry.vertices.push(new THREE.Vector3(-1,0,0));
+	geometry.vertices.push(new THREE.Vector3(-0.3,0,-0.95));
+	geometry.vertices.push(new THREE.Vector3(0,-0.5,0));
+	geometry.faces.push(new THREE.Face3(0,1,2));
+	geometry.faces.push(new THREE.Face3(0,2,3));
+	geometry.faces.push(new THREE.Face3(0,3,4));
+	geometry.faces.push(new THREE.Face3(0,4,5));
+	geometry.faces.push(new THREE.Face3(0,5,1));
+	geometry.faces.push(new THREE.Face3(6,2,1));
+	geometry.faces.push(new THREE.Face3(6,3,2));
+	geometry.faces.push(new THREE.Face3(6,4,3));
+	geometry.faces.push(new THREE.Face3(6,5,4));
+	geometry.faces.push(new THREE.Face3(6,1,5));
+	var material = new THREE.MeshLambertMaterial({color: colors});
+	var object = new THREE.Mesh(geometry, material); 
+	return object;
+	  
+  }
 
   // returns joint axes object
   function createJoint(name){}
