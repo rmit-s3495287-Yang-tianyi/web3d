@@ -86,7 +86,10 @@ function createJoint(length){
   return axes;
 	
 }
-
+function createJoint1(name){
+	  name=new THREE.Object3D;
+	  return name;
+  }
  function createPentagonalBipyramid(material){
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(new THREE.Vector3(0,0.5,0));
@@ -156,8 +159,77 @@ function createTorso(material){
 	lbarm.rotation.z=Math.PI / 4;
 	ltoes.position.x=1;
 	return joint1;
- }
+ }  
 
+function createLeg(side, material, isleft)
+  {
+	  var rightAdjust;
+	  if(isleft){
+		  rightAdjust=1;
+	  }
+	  else
+	  {
+		  rightAdjust=-1;
+	  }
+	var hip;
+	hip=createJoint1(hip);
+	var knee;
+	knee=createJoint1(knee);
+	var ankle;
+	ankle=createJoint1(ankle);
+	var tmt;
+	tmt=createJoint1(tmt);
+	
+	
+	var upLeg;
+	upLeg=createSquareBipyramid(0.5, 0.25, 0.25, material);
+	var lowLeg;
+	lowLeg=createSquareBipyramid(0.5, 0.25, 0.25, material);
+	var foot;
+	foot=createSquareBipyramid(0.5, 0.25, 0.25, material);
+	var toes;
+	toes=createToes(material);
+	toes.material.side = THREE.DoubleSide;
+	
+	hip.add(upLeg);
+	
+	hip.add(knee);
+	hip.add(lowLeg);
+	hip.add(ankle);
+	hip.add(foot);
+	hip.add(tmt);
+	hip.add(toes);
+	
+	knee.add(lowLeg);
+	knee.add(ankle);
+	knee.add(foot);
+	knee.add(tmt);
+	knee.add(toes);
+	
+	ankle.add(foot);
+	ankle.add(tmt);
+	ankle.add(toes);
+	
+	tmt.add(toes);
+	
+	hip.rotation.y= rightAdjust*1.575;
+	upLeg.position.x=0.5;
+	
+	knee.position.x=1;
+	knee.rotation.z=-2.214;
+	lowLeg.position.x=0.5;
+	
+	ankle.position.x=1;
+	ankle.rotation.z=2.214;
+	foot.position.x=0.5;
+	
+	tmt.position.x=1;
+	tmt.rotation.y=rightAdjust*-1.575;
+	toes.position.x=0;
+	
+	return hip;
+	
+  }
 function createEye(sizeX, sizeY, sizeZ, material){
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(new THREE.Vector3(sizeX ,sizeY ,0));
@@ -224,6 +296,8 @@ function createFrog(material){
 	larm.position.z=-0.58;
 	rarm.position.z=0.58;
 	scene.add(body);
+	scene.add(createLeg(1, material,true));
+	scene.add(createLeg(1, material,false));
 	scene.add(createWater());
 	var light1=directionalLight(body);
 	var light2=ambientLight();

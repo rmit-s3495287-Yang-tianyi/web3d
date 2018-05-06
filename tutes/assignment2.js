@@ -13,6 +13,7 @@ light.position.set(0, 1, 0);
 var evlight  = new THREE.AmbientLight(0xffffff);
 scene.add(evlight);
 scene.add(light);
+
 scene.add(createLeg(1, 0x404040,true));
 scene.add(createLeg(1, 0x404040,false));
 scene.add(createAxes(5));
