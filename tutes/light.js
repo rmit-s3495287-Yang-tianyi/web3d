@@ -7,9 +7,9 @@ var torusGeometry = new THREE.TorusGeometry(1,0.25,30,50);
 
 
 //普通材料
- var torusMaterial=new THREE.MeshBasicMaterial({wireframe : true}); 
+ //var torusMaterial=new THREE.MeshBasicMaterial({wireframe : true}); 
 //漫射材料
-//var torusMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+var torusMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
 //镜面反射
  //var torusMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, specular: 0xffffff});
 
@@ -26,7 +26,7 @@ light1.position.set(0, 0, 1);
 var light2  = new THREE.AmbientLight(0x404040);
 
 scene.add(light1);
-scene.add(light2);
+//scene.add(light2);
 scene.add(tours);
 
 renderer.render(scene, camera); 
