@@ -1,7 +1,7 @@
 var scene;
 var camera;
 var renderer;
-var body;
+
 var wireframew=0;
 var joint1;
 var joint2;
@@ -9,12 +9,29 @@ var material;
 var eyematerial;
 init();
 
+var light  = new THREE.DirectionalLight(0xffffff);
+
+light.position.set(1, 1, 1);
+var evlight  = new THREE.AmbientLight(0x404040);
+
 
 material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x00ff00});
 eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000000});
 
-createFrog(material);
+var frog=createJoint(frog);
 
+
+frog.add(createFrog(material));
+
+scene.add(evlight);
+scene.add(light);
+
+scene.add(frog);
+scene.add(createWater());
+
+scene.add(createAxes(5));
+	
+	
 renderer.render(scene, camera); 
 var controls = new THREE.TrackballControls(camera);
 controls.addEventListener('change', render);
@@ -109,6 +126,8 @@ function createAxes(length){
 	geometry.faces.push(new THREE.Face3(6,3,4));
 	geometry.faces.push(new THREE.Face3(6,4,5));
 	geometry.faces.push(new THREE.Face3(6,5,1));
+	
+	geometry.computeFaceNormals();
 	var object = new THREE.Mesh(geometry, material);
 	object.add(createAxes(0.5));
 	return object;
@@ -134,6 +153,7 @@ function createSquareBipyramid( material){
 	geometry.faces.push(new THREE.Face3(0, 4, 5));
 	geometry.faces.push(new THREE.Face3(3, 5, 4));
 	
+	geometry.computeFaceNormals();
 	var object = new THREE.Mesh(geometry, material); 
 	var axes=createAxes(0.5);
 	axes.position.x=0.5;
@@ -239,6 +259,7 @@ function createEye(sizeX, sizeY, sizeZ, material){
 	geometry.faces.push(new THREE.Face3(5, 3,2));
 	geometry.faces.push(new THREE.Face3(5, 4,3));
 	geometry.faces.push(new THREE.Face3(5, 1,4));
+	geometry.computeFaceNormals();
 	var object = new THREE.Mesh(geometry, material); 
 	object.position.x=0.75;
 	return object;
@@ -251,6 +272,9 @@ function createToes(material){
 	geometry.vertices.push(new THREE.Vector3(0.5, 0 ,-0.25));
 	geometry.vertices.push(new THREE.Vector3(0.5, 0 ,0.25));
 	geometry.faces.push(new THREE.Face3(0,1,2));
+	
+	geometry.computeFaceNormals();
+	
 	var object = new THREE.Mesh(geometry, material); 
 	var axes=createAxes(0.5);
 	object.add(axes);
@@ -265,12 +289,14 @@ function createWater(){
 	geometry.vertices.push(new THREE.Vector3(-5, -0.5 ,-2));
 	geometry.faces.push(new THREE.Face3(0,1,2));
 	geometry.faces.push(new THREE.Face3(2,3,0));
-	var m= new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0xaaaaaa});
+	geometry.computeFaceNormals();
+	var m= new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x0000CD});
 	var object = new THREE.Mesh(geometry, m); 
 	return object;
 }
 function createFrog(material){
 	
+	var body;
 	body=createPentagonalBipyramid(material);
 	var head=createHead(material);
 	
@@ -287,31 +313,10 @@ function createFrog(material){
 	
 	body.position.y=1;
 
-	scene.add(body);
-	scene.add(createWater());
-	var light1=directionalLight(body);
-	var light2=ambientLight();
-	scene.add(light1);
-	scene.add(light2);
-	scene.add(createAxes(5));
-	
+	return body;
 
 }
-   function createToes(material){
-	   
-		var geometry = new THREE.Geometry();
-		geometry.vertices.push(new THREE.Vector3(0,0,0));
-		geometry.vertices.push(new THREE.Vector3(0.5,0,-0.25));
-		geometry.vertices.push(new THREE.Vector3(0.5,0,0.25));
-		
-		geometry.faces.push(new THREE.Face3(0,1,2));
-		//geometry.computeFaceNormals();
-	
-		var object = new THREE.Mesh(geometry, material); 
-		object.add(createAxes(3));
-		
-		return object;
-  }
+
 function createLeg(end,material, isleft)
 {
 	var rightAdjust;
@@ -376,7 +381,7 @@ function createLeg(end,material, isleft)
 
 function directionalLight(name){
 	var light1  = new THREE.DirectionalLight(0xffffff);
-	light1.position.set(2,0,0);
+	light1.position.set(0,1,0);
 	light1.target = name;
 	return light1;
 }
