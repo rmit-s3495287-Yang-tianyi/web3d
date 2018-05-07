@@ -156,7 +156,6 @@ function createSquareBipyramid( material){
 	geometry.computeFaceNormals();
 	var object = new THREE.Mesh(geometry, material); 
 	var axes=createAxes(0.5);
-	axes.position.x=0.5;
 	object.add(axes);
 	return object;
           
@@ -171,8 +170,8 @@ function createHead(material){
 	reye.position.x=0.125;
 	leye.position.y=0;
 	reye.position.y=0;
-	leye.position.z=-0.225;
-	reye.position.z=0.225;
+	leye.position.z=-0.2;
+	reye.position.z=0.2;
 	
 	head.position.x=1.225;
 	head.position.y=0.225;
