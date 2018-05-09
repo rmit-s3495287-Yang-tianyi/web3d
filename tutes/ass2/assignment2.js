@@ -4,7 +4,7 @@ var renderer;
 
 var wireframew=0;
 var joint1;
-var hipf;
+var hip1;
 var material;
 var eyematerial;
 var bool_light=true;
@@ -55,7 +55,7 @@ function handleKeyDown(event)
 		}
         break;
     case 72:
-        hipf.rotation.z += 1 * Math.PI / 180;
+        hip1.rotation.z += 1 * Math.PI / 180;
         break;
 	case 38:
         elbow.rotation.z += 1 * Math.PI / 180;
@@ -209,10 +209,10 @@ function createTorso(material){
 	ltoes.position.x=1;
 	return joint1;
  }
-function createFLeg(x,y,z,material)
+function createFLeg(z,material)
 {
 
-	
+	var hipf;
 	hipf=createJoint(hipf);
 	var knee;
 	knee=createJoint(knee);
@@ -238,9 +238,7 @@ function createFLeg(x,y,z,material)
 	
 	
 	
-	hipf.rotation.z= -1.575;
-	hipf.position.x= x;
-	hipf.position.y= y;
+	
 	hipf.position.z= z;
 	
 	knee.position.x=0.5;
@@ -371,13 +369,18 @@ function createFrog(material){
 	var body;
 	body=createPentagonalBipyramid(material);
 	var head=createHead(material);
+	hip1=createJoint(hip1);
 	
-	var larm=createFLeg(0.8,-0.5,-0.58,material);
-	var rarm=createFLeg(0.8,-0.5,0.58,material);
+	var larm=createFLeg(-0.58,material);
+	var rarm=createFLeg(0.58,material);
+	hip1.add(larm);
+	hip1.add(rarm);
 	body.add(head);
-	body.add(rarm);
-	body.add(larm);
-
+	body.add(hip1);
+	
+hip1.rotation.z= -1.575;
+	hip1.position.x= 0.8;
+	hip1.position.y= -0.5;
 	
 	
 	body.add(createLeg(-1, material, true));
