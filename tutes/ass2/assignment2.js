@@ -3,8 +3,9 @@ var camera;
 var renderer;
 
 var wireframew=0;
-var joint1;
-var joint2;
+var hipf;
+var knee;
+var ankle;
 var material;
 var eyematerial;
 init();
@@ -54,7 +55,7 @@ function handleKeyDown(event)
 		}
         break;
     case 39:
-        joint1.rotation.z += 1 * Math.PI / 180;
+        hipf.rotation.z += 1 * Math.PI / 180;
         break;
 	case 38:
         elbow.rotation.z += 1 * Math.PI / 180;
@@ -182,32 +183,14 @@ function createHead(material){
 	return head;
 }
 
-function createTorso(material){
-	joint1 = new THREE.Object3D();
-	var ltarm=createSquareBipyramid( material);
-	var lbarm=createSquareBipyramid( material);
-	var ltoes=createToes(material);
-	joint1.add(ltarm);
-	ltarm.add(lbarm);
-	lbarm.add(ltoes);
-	joint1.position.x=0.8;
-	joint1.rotation.z=-Math.PI / 4;
-	lbarm.position.x=1;
-	lbarm.rotation.z=Math.PI / 4;
-	ltoes.position.x=1;
-	return joint1;
- }
+
 function createFLeg(x,y,z,material)
 {
 
-	var hip;
-	hip=createJoint(hip);
-	var knee;
+	hipf=createJoint(hipf);
 	knee=createJoint(knee);
-	var ankle;
 	ankle=createJoint(ankle);
 
-	
 	
 	var upLeg;
 	upLeg=createSquareBipyramid( material);
@@ -216,8 +199,8 @@ function createFLeg(x,y,z,material)
 	var toes;
 	toes=createToes(material);
 	
-	hip.add(upLeg);
-	hip.add(knee);
+	hipf.add(upLeg);
+	hipf.add(knee);
 	
 	knee.add(lowLeg);
 	knee.add(ankle);
@@ -226,10 +209,10 @@ function createFLeg(x,y,z,material)
 	
 	
 	
-	hip.rotation.z= -1.575;
-	hip.position.x= x;
-	hip.position.y= y;
-	hip.position.z= z;
+	hipf.rotation.z= -1.575;
+	hipf.position.x= x;
+	hipf.position.y= y;
+	hipf.position.z= z;
 	
 	knee.position.x=0.5;
 	knee.rotation.z=1.575;
@@ -237,6 +220,67 @@ function createFLeg(x,y,z,material)
 	
 	ankle.position.x=1;
 	
+	toes.position.x=0;
+	
+	return hipf;
+	
+}
+function createLeg(end,material, isleft)
+{
+	var rightAdjust;
+	if(isleft){
+		rightAdjust=1;
+	}
+	else
+	{
+		rightAdjust=-1;
+	}
+	var hip;
+	hip=createJoint(hip);
+	var knee;
+	knee=createJoint(knee);
+	var ankle;
+	ankle=createJoint(ankle);
+	var tmt;
+	tmt=createJoint(tmt);
+	
+	
+	var upLeg;
+	upLeg=createSquareBipyramid( material);
+	var lowLeg;
+	lowLeg=createSquareBipyramid( material);
+	var foot;
+	foot=createSquareBipyramid( material);
+	var toes;
+	toes=createToes(material);
+	toes.material.side = THREE.DoubleSide;
+	
+	hip.add(upLeg);
+	hip.add(knee);
+	
+	knee.add(lowLeg);
+	knee.add(ankle);
+	
+	ankle.add(foot);
+	ankle.add(tmt);
+	
+	tmt.add(toes);
+	
+	
+	hip.rotation.y= rightAdjust*1.575;
+	hip.position.x= end;
+	upLeg.position.x=0.5;
+	
+	knee.position.x=1;
+	knee.rotation.z=-2.214;
+	lowLeg.position.x=0.5;
+	
+	ankle.position.x=1;
+	ankle.rotation.z=2.214;
+	foot.position.x=0.5;
+	
+	tmt.position.x=1;
+	tmt.rotation.y=rightAdjust*-1.575;
 	toes.position.x=0;
 	
 	return hip;
@@ -316,67 +360,7 @@ function createFrog(material){
 
 }
 
-function createLeg(end,material, isleft)
-{
-	var rightAdjust;
-	if(isleft){
-		rightAdjust=1;
-	}
-	else
-	{
-		rightAdjust=-1;
-	}
-	var hip;
-	hip=createJoint(hip);
-	var knee;
-	knee=createJoint(knee);
-	var ankle;
-	ankle=createJoint(ankle);
-	var tmt;
-	tmt=createJoint(tmt);
-	
-	
-	var upLeg;
-	upLeg=createSquareBipyramid( material);
-	var lowLeg;
-	lowLeg=createSquareBipyramid( material);
-	var foot;
-	foot=createSquareBipyramid( material);
-	var toes;
-	toes=createToes(material);
-	toes.material.side = THREE.DoubleSide;
-	
-	hip.add(upLeg);
-	hip.add(knee);
-	
-	knee.add(lowLeg);
-	knee.add(ankle);
-	
-	ankle.add(foot);
-	ankle.add(tmt);
-	
-	tmt.add(toes);
-	
-	
-	hip.rotation.y= rightAdjust*1.575;
-	hip.position.x= end;
-	upLeg.position.x=0.5;
-	
-	knee.position.x=1;
-	knee.rotation.z=-2.214;
-	lowLeg.position.x=0.5;
-	
-	ankle.position.x=1;
-	ankle.rotation.z=2.214;
-	foot.position.x=0.5;
-	
-	tmt.position.x=1;
-	tmt.rotation.y=rightAdjust*-1.575;
-	toes.position.x=0;
-	
-	return hip;
-	
-}
+
 
 function directionalLight(name){
 	var light1  = new THREE.DirectionalLight(0xffffff);
