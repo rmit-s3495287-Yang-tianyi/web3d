@@ -3,9 +3,8 @@ var camera;
 var renderer;
 
 var wireframew=0;
+var joint1;
 var hipf;
-var knee;
-var ankle;
 var material;
 var eyematerial;
 init();
@@ -54,7 +53,7 @@ function handleKeyDown(event)
 			eyematerial.wireframe=false;
 		}
         break;
-    case 39:
+    case 72:
         hipf.rotation.z += 1 * Math.PI / 180;
         break;
 	case 38:
@@ -183,14 +182,32 @@ function createHead(material){
 	return head;
 }
 
-
+function createTorso(material){
+	joint1 = new THREE.Object3D();
+	var ltarm=createSquareBipyramid( material);
+	var lbarm=createSquareBipyramid( material);
+	var ltoes=createToes(material);
+	joint1.add(ltarm);
+	ltarm.add(lbarm);
+	lbarm.add(ltoes);
+	joint1.position.x=0.8;
+	joint1.rotation.z=-Math.PI / 4;
+	lbarm.position.x=1;
+	lbarm.rotation.z=Math.PI / 4;
+	ltoes.position.x=1;
+	return joint1;
+ }
 function createFLeg(x,y,z,material)
 {
 
+	
 	hipf=createJoint(hipf);
+	var knee;
 	knee=createJoint(knee);
+	var ankle;
 	ankle=createJoint(ankle);
 
+	
 	
 	var upLeg;
 	upLeg=createSquareBipyramid( material);
@@ -346,8 +363,8 @@ function createFrog(material){
 	var larm=createFLeg(0.8,-0.5,-0.58,material);
 	var rarm=createFLeg(0.8,-0.5,0.58,material);
 	body.add(head);
-	body.add(larm);
 	body.add(rarm);
+	body.add(larm);
 
 	
 	
