@@ -13,8 +13,13 @@ var eyematerial;
 var bool_light=true;
 var bool_axes=true;
 var axes_num=0;
-
+var body;
+var t=0,dt;
+var keys =[0,2,4,6,8,10];
+var values =[0.1,0.3,0.5,0.7,0.9,1.1];
 init();
+
+var clock = new THREE.Clock(); 
 
 var light  = new THREE.DirectionalLight(0xffffff);
 
@@ -177,6 +182,10 @@ function render() {
     renderer.render(scene, camera); 
 }
 function animate() {
+	dt = clock.getDelta();
+    t += dt;
+    body.position.x = interpolator(keys,values,t);
+  
     render();
     requestAnimationFrame(animate);
     controls.update();
@@ -496,7 +505,7 @@ function createWater(){
 }
 function createFrog(material){
 	
-	var body;
+	
 	body=createPentagonalBipyramid(material);
 	var head=createHead(material);
 	
@@ -515,11 +524,10 @@ function createFrog(material){
 	body.add(RLHip);
 	
 	body.position.y=1;
-
+	
 	return body;
 
 }
-
 
 
 function directionalLight(name){
@@ -533,4 +541,22 @@ function ambientLight(){
 	var light2  = new THREE.AmbientLight(0x404040);
 	return light2;
 }
+
+function lerp(k1,v1,k2,v2,k){
+	return v1+(k-k1)/(k2-k1)*(v2-v1);
+}
+
+ function findInterval(keys, key){
+	 for(var i=0;i<keys.length;i++){
+		 if(keys[i]>key){
+			 return i;
+		 }
+	 }
+ }
+
+ function interpolator(keys, values, key){
+	 var num=findInterval(keys, key);
+	 return lerp(keys[num-1],values[num-1],keys[num],values[num],key);
+ }
+
 
