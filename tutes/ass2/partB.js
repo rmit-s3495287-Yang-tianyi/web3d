@@ -15,7 +15,7 @@ var bool_axes=true;
 var axes_num=0;
 var body;
 var t=0,dt;
-var keys =[0,2,4,6,8,10];
+var keys =[0,2,4,6,8,300];
 var values =[0.1,0.3,0.5,0.7,0.9,1.1];
 init();
 
@@ -184,6 +184,9 @@ function render() {
 function animate() {
 	dt = clock.getDelta();
     t += dt;
+	if(t>=keys[keys.length]){
+		t=0;
+	}
     body.position.x = interpolator(keys,values,t);
   
     render();
