@@ -1,18 +1,30 @@
 var scene;
 var camera;
 var renderer;
-
+var max_Range=0;
+var min_Range=- Math.PI/2;
 var wireframew=0;
 var joint1;
-var hipf;
+var isFront=false;
+var isRight=false;
+var targer_Joint="Hip";
 var material;
 var eyematerial;
 var bool_light=true;
+var bool_axes=true;
+var axes_num=0;
+var body;
+var t=0,dt;
+var keys =[0,0.5,1,1.5,2];
+var y_values =[0,0.8,1.6,0.8,0];
+var x_values =[-4,-2,0,2.0,4.0];
 init();
+
+var clock = new THREE.Clock(); 
 
 var light  = new THREE.DirectionalLight(0xffffff);
 
-light.position.set(1, 1, 1);
+light.position.set(0, 0, 1);
 var evlight  = new THREE.AmbientLight(0x404040);
 
 
@@ -21,17 +33,17 @@ eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000
 
 var frog=createJoint(frog);
 
-
 frog.add(createFrog(material));
 
 scene.add(evlight);
 scene.add(light);
 
 scene.add(frog);
+
 scene.add(createWater());
 
 scene.add(createAxes(5));
-	
+var vector = new THREE.Vector3();
 	
 renderer.render(scene, camera); 
 var controls = new THREE.TrackballControls(camera);
@@ -41,7 +53,27 @@ animate();
 document.onkeydown = handleKeyDown;
 
 function handleKeyDown(event)
-{
+{	var a;
+
+		if(isFront)
+		{
+			if(isRight){
+				a=scene.getObjectByName( "F"+"R"+targer_Joint,true );
+			}
+			else
+			{
+				a=scene.getObjectByName( "F"+"L"+targer_Joint,true );
+			}
+		}
+		else
+		{
+			if(isRight){
+				a=scene.getObjectByName( "R"+"R"+targer_Joint,true );
+			}
+			else{
+				a=scene.getObjectByName( "R"+"L"+targer_Joint,true );
+			}
+		}
     switch (event.keyCode) {
     case 77:
         if(wireframew==0){
@@ -55,14 +87,53 @@ function handleKeyDown(event)
 		}
         break;
     case 72:
-        hipf.rotation.z += 1 * Math.PI / 180;
+		
+		targer_Joint="Hip";
+        max_Range=0;
+		min_Range=- Math.PI/2 ;
+        break;
+    case 75:
+		targer_Joint="Knee";
+        max_Range= Math.PI;
+		min_Range= -Math.PI;
+
+        break;
+    case 65:
+		
+		targer_Joint="Ankle";
+        max_Range= Math.PI;
+		min_Range= -Math.PI;
+        break;
+    case 84:
+		targer_Joint="Tmt";
+        max_Range= Math.PI/2;
+		min_Range= -Math.PI/2;
+
         break;
 	case 38:
-        elbow.rotation.z += 1 * Math.PI / 180;
+        isFront=true;
         break;
     case 40:
-        elbow.rotation.z -= 1 * Math.PI / 180;
+        isFront=false;
         break;
+	case 39:
+        isRight=true;
+        break;
+    case 37:
+        isRight=false;
+        break;
+	case 187:
+		if(a.rotation.z<max_Range){
+			a.rotation.z+= 1 * Math.PI / 180;
+		}
+		console.log(a.rotation.z);
+	break;
+	case 189:
+	
+		if(a.rotation.z>min_Range){
+			a.rotation.z-= 1 * Math.PI / 180;
+		}
+	break;
     case 76:
         if(bool_light==true){
 			bool_light = false;
@@ -74,7 +145,30 @@ function handleKeyDown(event)
 			light.visible = true;
 		}
         break;
+
+        case 88:
+        if(bool_axes==true){
+			bool_axes = false;
+		}else{
+			bool_axes = true;
+		}
+		hideAxes();
+        break;
     }
+    
+    
+}
+function hideAxes() {
+	for (var i = 0; i <axes_num; i++) {
+		var axe;
+		axe=scene.getObjectByName("axes"+i);
+		if (bool_axes==false) {	
+			axe.visible=false;
+		}
+		else{
+			axe.visible=true;
+		}
+	}
 }
 function init(){
 	scene = new THREE.Scene();
@@ -89,13 +183,86 @@ function render() {
     renderer.render(scene, camera); 
 }
 function animate() {
-    render();
+	
+	dt = clock.getDelta();
+    t += dt;
+	if(t>keys[keys.length-1])
+	{
+		t=0;
+	}
+	//Rear leg part
+	var rrhip = frog.getObjectByName( "RRHip",true );
+	var rrhip_xvalue=[0,0.5,1,0.5,0];
+	var rrhip_yvalue=[-Math.PI/2,-Math.PI/2-0.3,-Math.PI/2-0.6,-Math.PI/2-0.3,-Math.PI/2];
+	
+	var rrknee = frog.getObjectByName( "RRKnee",true );
+	var knee_zvalue=[-2.214,-2.214+0.75,-2.214+1.5,-2.214+0.75,-2.214];
+	
+	var rrankle = frog.getObjectByName( "RRAnkle",true );
+	var ankle_zvalue=[2.214,2.214-0.75,2.214-1.5,2.214-0.75,2.214];
+	var rrtmt = frog.getObjectByName( "RRTmt",true );
+	
+	var rlhip = frog.getObjectByName( "RLHip",true );
+	var rlhip_xvalue=[0,-0.5,-1,-0.5,0];
+	var rlhip_yvalue=[Math.PI/2,Math.PI/2+0.3,Math.PI/2+0.6,Math.PI/2+0.3,Math.PI/2];
+	var rlknee = frog.getObjectByName( "RLKnee",true );
+	var rlankle = frog.getObjectByName( "RLAnkle",true );
+	var rltmt = frog.getObjectByName( "RLTmt",true );
+	
+	var rrtmt_xvalue=[0,-0.1,-0.2,-0.1,0];
+	var rltmt_xvalue=[0,0.1,0.2,0.1,0];
+	
+    frog.position.x = interpolator(keys,x_values,t);
+	frog.position.y = interpolator(keys,y_values,t);
+	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
+	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
+	
+	rrknee.rotation.z = interpolator(keys,knee_zvalue,t);
+	rrankle.rotation.z = interpolator(keys,ankle_zvalue,t);
+	
+	rlhip.rotation.x = interpolator(keys,rlhip_xvalue,t);
+	rlhip.rotation.y = interpolator(keys,rlhip_yvalue,t);
+	
+	rlknee.rotation.z = interpolator(keys,knee_zvalue,t);
+	rlankle.rotation.z = interpolator(keys,ankle_zvalue,t);
+	
+	rltmt.rotation.x = interpolator(keys,rltmt_xvalue,t);
+	rrtmt.rotation.x = interpolator(keys,rrtmt_xvalue,t);
+	
+	//Front legs part
+	var frhip = frog.getObjectByName( "FRHip",true );
+	var frhip_zvalue=[-Math.PI/2,-Math.PI/2+0.5,-Math.PI/2+1,-Math.PI/2+0.5,-Math.PI/2];
+	
+	var frknee = frog.getObjectByName( "FRKnee",true );
+	var fknee_zvalue=[Math.PI/2,Math.PI/2-0.75,Math.PI/2-1.5,Math.PI/2-0.75,Math.PI/2];
+	
+	var frankle = frog.getObjectByName( "FRAnkle",true );
+	var fankle_zvalue=[0,0.3,0.6,0.3,0];
+	
+	
+	
+	frhip.rotation.z = interpolator(keys,frhip_zvalue,t);
+	frknee.rotation.z = interpolator(keys,fknee_zvalue,t);
+	frankle.rotation.z = interpolator(keys,fankle_zvalue,t);
+	
+	var flhip = frog.getObjectByName( "FLHip",true );
+	var flhip_zvalue=[-Math.PI/2,-Math.PI/2+0.5,-Math.PI/2+1,-Math.PI/2+0.5,-Math.PI/2];
+	
+	var flknee = frog.getObjectByName( "FLKnee",true );
+	
+	var flankle = frog.getObjectByName( "FLAnkle",true );
+	flhip.rotation.z = interpolator(keys,frhip_zvalue,t);
+	flknee.rotation.z = interpolator(keys,fknee_zvalue,t);
+	flankle.rotation.z = interpolator(keys,fankle_zvalue,t);
+	//console.log(rrtmt.rotation.z);
+	renderer.render(scene, camera); 
     requestAnimationFrame(animate);
     controls.update();
 }
 
   function createJoint(name){
 	  name=new THREE.Object3D;
+	  name.add(createAxes(0.5));
 	  return name;
   }
 function createAxes(length){
@@ -115,7 +282,16 @@ function createAxes(length){
   var material = new THREE.LineBasicMaterial();
   material.vertexColors = THREE.VertexColors;
   var axes = new THREE.LineSegments(geometry, material);
-  axes.name = "axes";
+  axes.name = "axes"+axes_num;
+  if (bool_axes) {
+  	axes.visible=true;
+  }
+  else
+  {
+  	axes.visible=false;
+  }
+  axes_num++;
+
   return axes;
 }
 
@@ -212,13 +388,25 @@ function createTorso(material){
 function createFLeg(x,y,z,material)
 {
 
-	
-	hipf=createJoint(hipf);
+	var hip;
+	hip=createJoint(hip);
 	var knee;
 	knee=createJoint(knee);
 	var ankle;
 	ankle=createJoint(ankle);
 
+	if (z>0)
+	{
+		hip.name="FRHip"
+		knee.name="FRKnee";
+		ankle.name="FRAnkle";
+	}
+	else
+	{
+		hip.name="FLHip"
+		knee.name="FLKnee";
+		ankle.name="FLAnkle";
+	}
 	
 	
 	var upLeg;
@@ -228,8 +416,8 @@ function createFLeg(x,y,z,material)
 	var toes;
 	toes=createToes(material);
 	
-	hipf.add(upLeg);
-	hipf.add(knee);
+	hip.add(upLeg);
+	hip.add(knee);
 	
 	knee.add(lowLeg);
 	knee.add(ankle);
@@ -238,20 +426,22 @@ function createFLeg(x,y,z,material)
 	
 	
 	
-	hipf.rotation.z= -1.575;
-	hipf.position.x= x;
-	hipf.position.y= y;
-	hipf.position.z= z;
+	hip.position.x= x;
+	hip.position.y= y;
+	hip.position.z= z;
+	hip.rotation.z= -Math.PI/2;
 	
-	knee.position.x=0.5;
-	knee.rotation.z=1.575;
+	
+	upLeg.position.x=0.5;
+	knee.position.x=1;
+	knee.rotation.z=Math.PI/2;
 	lowLeg.position.x=0.5;
 	
 	ankle.position.x=1;
 	
 	toes.position.x=0;
 	
-	return hipf;
+	return hip;
 	
 }
 function createLeg(end,material, isleft)
@@ -266,13 +456,29 @@ function createLeg(end,material, isleft)
 	}
 	var hip;
 	hip=createJoint(hip);
+
 	var knee;
 	knee=createJoint(knee);
+
+
 	var ankle;
 	ankle=createJoint(ankle);
 	var tmt;
 	tmt=createJoint(tmt);
-	
+	if (isleft==false)
+	{
+		hip.name="RRHip"
+		knee.name="RRKnee";
+		ankle.name="RRAnkle";
+		tmt.name="RRTmt";
+	}
+	else
+	{
+		hip.name="RLHip"
+		knee.name="RLKnee";
+		ankle.name="RLAnkle";
+		tmt.name="RLTmt";
+	}
 	
 	var upLeg;
 	upLeg=createSquareBipyramid( material);
@@ -309,8 +515,8 @@ function createLeg(end,material, isleft)
 	foot.position.x=0.5;
 	
 	tmt.position.x=1;
-	tmt.rotation.y=rightAdjust*-1.575;
-	toes.position.x=0;
+	tmt.rotation.y=rightAdjust*(-1.575);
+	
 	
 	return hip;
 	
@@ -368,27 +574,29 @@ function createWater(){
 }
 function createFrog(material){
 	
-	var body;
+	
 	body=createPentagonalBipyramid(material);
 	var head=createHead(material);
 	
-	var larm=createFLeg(0.8,-0.5,-0.58,material);
-	var rarm=createFLeg(0.8,-0.5,0.58,material);
+	var FLHip=createFLeg(0.8,0,-0.58,material);
+	var FRHip=createFLeg(0.8,0,0.58,material);
+	
+	var RRHip=createLeg(-1, material, false);
+	var RLHip=createLeg(-1, material, true);
+	
 	body.add(head);
-	body.add(rarm);
-	body.add(larm);
+	body.add(FRHip);
+	body.add(FLHip);
 
-	
-	
-	body.add(createLeg(-1, material, true));
-	body.add(createLeg(-1, material, false));
+
+	body.add(RRHip);
+	body.add(RLHip);
 	
 	body.position.y=1;
-
+	
 	return body;
 
 }
-
 
 
 function directionalLight(name){
@@ -402,4 +610,21 @@ function ambientLight(){
 	var light2  = new THREE.AmbientLight(0x404040);
 	return light2;
 }
+
+function lerp(k1,v1,k2,v2,k){
+	return v1+(k-k1)/(k2-k1)*(v2-v1);
+}
+
+ function findInterval(keys, key){
+	 for(var i=0;i<keys.length;i++){
+		 if(keys[i]>key){
+			 return i;
+		 }
+	 }
+ }
+
+ function interpolator(keys, values, key){
+	 var num=findInterval(keys, key);
+	 return lerp(keys[num-1],values[num-1],keys[num],values[num],key);
+ }
 
