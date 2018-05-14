@@ -31,9 +31,9 @@ eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000
 var frog=createJoint(frog);
 
 frog.add(createFrog(material));
-
-scene.add(evlight);
 scene.add(light);
+scene.add(evlight);
+
 
 scene.add(frog);
 
@@ -134,11 +134,11 @@ function handleKeyDown(event)
     case 76:
         if(bool_light==true){
 			bool_light = false;
-			evlight.visibale = false;
+			scene.remove(evlight);
 			light.visible = false;
 		}else{
 			bool_light = true;
-			evlight.visibale = true;
+			scene.add(evlight);
 			light.visible = true;
 		}
         break;
@@ -240,8 +240,36 @@ function createAxes(length){
 	geometry.faces.push(new THREE.Face3(6,4,5));
 	geometry.faces.push(new THREE.Face3(6,5,1));
 	
+	 
+	var UVs = [ 
+    new THREE.Vector2(0.5,0.5), 
+  
+    new THREE.Vector2(0.91,0.8), 
+    new THREE.Vector2(0.91,0.2),
+	new THREE.Vector2(0.34,0.02),
+	new THREE.Vector2(0,0.5),
+	new THREE.Vector2(0.34,0.98)
+];
+
+	geometry.faceVertexUvs[0][0] = [UVs[0], UVs[1], UVs[2]];
+	geometry.faceVertexUvs[0][1] = [UVs[0], UVs[2], UVs[3]];
+	geometry.faceVertexUvs[0][2] = [UVs[0], UVs[3], UVs[4]];
+	geometry.faceVertexUvs[0][3] = [UVs[0], UVs[4], UVs[5]];
+	geometry.faceVertexUvs[0][4] = [UVs[0], UVs[5], UVs[1]];
+	 
+	geometry.faceVertexUvs[0][5] = [UVs[0], UVs[1], UVs[2]];
+	geometry.faceVertexUvs[0][6] = [UVs[0], UVs[2], UVs[3]];
+	geometry.faceVertexUvs[0][7] = [UVs[0], UVs[3], UVs[4]];
+	geometry.faceVertexUvs[0][8] = [UVs[0], UVs[4], UVs[5]];
+	geometry.faceVertexUvs[0][9] = [UVs[0], UVs[5], UVs[1]];
+	 
 	geometry.computeFaceNormals();
+	material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0xffffff});
 	var object = new THREE.Mesh(geometry, material);
+	
+	var loader = new THREE.TextureLoader();
+	var texture = loader.load("penta.png");
+ 	object.material.map = texture;
 	object.add(createAxes(0.5));
 	return object;
 }
@@ -524,16 +552,6 @@ function createFrog(material){
 }
 
 
-function directionalLight(name){
-	var light1  = new THREE.DirectionalLight(0xffffff);
-	light1.position.set(0,1,0);
-	light1.target = name;
-	return light1;
-}
 
-function ambientLight(){
-	var light2  = new THREE.AmbientLight(0x404040);
-	return light2;
-}
 
 
