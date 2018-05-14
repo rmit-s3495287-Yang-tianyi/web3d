@@ -15,15 +15,16 @@ var bool_axes=true;
 var axes_num=0;
 var body;
 var t=0,dt;
-var keys =[0,2,4,6,8,300];
-var values =[0.1,0.3,0.5,0.7,0.9,1.1];
+var keys =[0,0.5,1,1.5,2];
+var y_values =[0,0.8,1.6,0.8,0];
+var x_values =[-4,-2,0,2.0,4.0];
 init();
 
 var clock = new THREE.Clock(); 
 
 var light  = new THREE.DirectionalLight(0xffffff);
 
-light.position.set(1, 1, 1);
+light.position.set(0, 0, 1);
 var evlight  = new THREE.AmbientLight(0x404040);
 
 
@@ -182,14 +183,79 @@ function render() {
     renderer.render(scene, camera); 
 }
 function animate() {
+	
 	dt = clock.getDelta();
     t += dt;
-	if(t>=keys[keys.length]){
+	if(t>keys[keys.length-1])
+	{
 		t=0;
 	}
-    body.position.x = interpolator(keys,values,t);
-  
-    render();
+	//Rear leg part
+	var rrhip = frog.getObjectByName( "RRHip",true );
+	var rrhip_xvalue=[0,0.5,1,0.5,0];
+	var rrhip_yvalue=[-Math.PI/2,-Math.PI/2-0.3,-Math.PI/2-0.6,-Math.PI/2-0.3,-Math.PI/2];
+	
+	var rrknee = frog.getObjectByName( "RRKnee",true );
+	var knee_zvalue=[-2.214,-2.214+0.75,-2.214+1.5,-2.214+0.75,-2.214];
+	
+	var rrankle = frog.getObjectByName( "RRAnkle",true );
+	var ankle_zvalue=[2.214,2.214-0.75,2.214-1.5,2.214-0.75,2.214];
+	var rrtmt = frog.getObjectByName( "RRTmt",true );
+	
+	var rlhip = frog.getObjectByName( "RLHip",true );
+	var rlhip_xvalue=[0,-0.5,-1,-0.5,0];
+	var rlhip_yvalue=[Math.PI/2,Math.PI/2+0.3,Math.PI/2+0.6,Math.PI/2+0.3,Math.PI/2];
+	var rlknee = frog.getObjectByName( "RLKnee",true );
+	var rlankle = frog.getObjectByName( "RLAnkle",true );
+	var rltmt = frog.getObjectByName( "RLTmt",true );
+	
+	var rrtmt_xvalue=[0,-0.1,-0.2,-0.1,0];
+	var rltmt_xvalue=[0,0.1,0.2,0.1,0];
+	
+    frog.position.x = interpolator(keys,x_values,t);
+	frog.position.y = interpolator(keys,y_values,t);
+	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
+	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
+	
+	rrknee.rotation.z = interpolator(keys,knee_zvalue,t);
+	rrankle.rotation.z = interpolator(keys,ankle_zvalue,t);
+	
+	rlhip.rotation.x = interpolator(keys,rlhip_xvalue,t);
+	rlhip.rotation.y = interpolator(keys,rlhip_yvalue,t);
+	
+	rlknee.rotation.z = interpolator(keys,knee_zvalue,t);
+	rlankle.rotation.z = interpolator(keys,ankle_zvalue,t);
+	
+	rltmt.rotation.x = interpolator(keys,rltmt_xvalue,t);
+	rrtmt.rotation.x = interpolator(keys,rrtmt_xvalue,t);
+	
+	//Front legs part
+	var frhip = frog.getObjectByName( "FRHip",true );
+	var frhip_zvalue=[-Math.PI/2,-Math.PI/2+0.5,-Math.PI/2+1,-Math.PI/2+0.5,-Math.PI/2];
+	
+	var frknee = frog.getObjectByName( "FRKnee",true );
+	var fknee_zvalue=[Math.PI/2,Math.PI/2-0.75,Math.PI/2-1.5,Math.PI/2-0.75,Math.PI/2];
+	
+	var frankle = frog.getObjectByName( "FRAnkle",true );
+	var fankle_zvalue=[0,0.3,0.6,0.3,0];
+	
+	
+	
+	frhip.rotation.z = interpolator(keys,frhip_zvalue,t);
+	frknee.rotation.z = interpolator(keys,fknee_zvalue,t);
+	frankle.rotation.z = interpolator(keys,fankle_zvalue,t);
+	
+	var flhip = frog.getObjectByName( "FLHip",true );
+	var flhip_zvalue=[-Math.PI/2,-Math.PI/2+0.5,-Math.PI/2+1,-Math.PI/2+0.5,-Math.PI/2];
+	
+	var flknee = frog.getObjectByName( "FLKnee",true );
+	
+	var flankle = frog.getObjectByName( "FLAnkle",true );
+	flhip.rotation.z = interpolator(keys,frhip_zvalue,t);
+	flknee.rotation.z = interpolator(keys,fknee_zvalue,t);
+	flankle.rotation.z = interpolator(keys,fankle_zvalue,t);
+	//console.log(rrtmt.rotation.z);
+	renderer.render(scene, camera); 
     requestAnimationFrame(animate);
     controls.update();
 }
@@ -363,12 +429,12 @@ function createFLeg(x,y,z,material)
 	hip.position.x= x;
 	hip.position.y= y;
 	hip.position.z= z;
-	hip.rotation.z= -1.575;
+	hip.rotation.z= -Math.PI/2;
 	
 	
 	upLeg.position.x=0.5;
 	knee.position.x=1;
-	knee.rotation.z=1.575;
+	knee.rotation.z=Math.PI/2;
 	lowLeg.position.x=0.5;
 	
 	ankle.position.x=1;
@@ -449,8 +515,8 @@ function createLeg(end,material, isleft)
 	foot.position.x=0.5;
 	
 	tmt.position.x=1;
-	tmt.rotation.y=rightAdjust*-1.575;
-	toes.position.x=0;
+	tmt.rotation.y=rightAdjust*(-1.575);
+	
 	
 	return hip;
 	
@@ -561,5 +627,4 @@ function lerp(k1,v1,k2,v2,k){
 	 var num=findInterval(keys, key);
 	 return lerp(keys[num-1],values[num-1],keys[num],values[num],key);
  }
-
 
