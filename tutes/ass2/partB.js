@@ -13,11 +13,9 @@ var eyematerial;
 var bool_light=true;
 var bool_axes=true;
 var axes_num=0;
-var body;
 var t=0,dt;
 var keys =[0,0.5,1,1.5,2];
-var y_values =[0,0.8,1.6,0.8,0];
-var x_values =[-4,-2,0,2.0,4.0];
+var count=1;
 init();
 
 var clock = new THREE.Clock(); 
@@ -34,15 +32,19 @@ eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000
 
 var frogModel=createJoint(frogModel);
 
-var frog1=new Array(new frogObject(1,1,1,1,1,1,frogModel));
+var f1=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/2,createFrog(material));
+var f2=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/4,createFrog(material));
+var f3=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/6,createFrog(material));
 
-frog1[0].frogjoint.add(createFrog(material));
+var frog1=[f1,f2,f3];
+
 
 scene.add(evlight);
 scene.add(light);
 
 scene.add(frog1[0].frogjoint);
-
+scene.add(frog1[1].frogjoint);
+scene.add(frog1[2].frogjoint);
 scene.add(createWater());
 
 scene.add(createAxes(5));
@@ -55,13 +57,16 @@ animate();
 
 document.onkeydown = handleKeyDown;
 
-function frogObject(x,y,z,vx,vy,vz,frogjoint) {
+function frogObject(x,y,z,vx,vy,vz,x_values,y_values,rotate,frogjoint) {
   this.x = x;
   this.y = y;
   this.z = z;
   this.vx=vx;
   this.vy=vy;
   this.vz=vz;
+  this.rotate=rotate;
+  this.x_values=x_values;
+  this.y_values=y_values;
   
   this.frogjoint = frogjoint;
 }
@@ -198,24 +203,45 @@ function render() {
 }
 function animate() {
 	
+	var isUpdate=false;
 	dt = clock.getDelta();
     t += dt;
 	if(t>keys[keys.length-1])
 	{
 		t=0;
+		isUpdate=true;
+	}
+	if(isUpdate)
+	{
+		for(var i=0;i<frog1.length;i++)
+		{
+			console.log(frog1.length);
+			updateXYZvalue(frog1[i]);
+			
+		}
+		count++;
 	}
 	for(var i=0;i<frog1.length;i++)
 	{
-		frogMovement(frog1[0].frogjoint);
+		frogMovement(frog1[i].frogjoint,frog1[i].x_values,frog1[i].y_values,frog1[i].z_values,frog1[i].rotate);
 	}
-
+	
+	
 	
 	//console.log(rrtmt.rotation.z);
 	renderer.render(scene, camera); 
     requestAnimationFrame(animate);
     controls.update();
 }
-function frogMovement(frog)
+function updateXYZvalue(frog)
+{
+	for(var i=0;i<frog.x_values.length;i++)
+	{
+		frog.x_values[i]+=8;
+	}
+	
+}
+function frogMovement(frog,x_values,y_values,z_values,rotate)
 {
 		//Rear leg part
 	var rrhip = frog.getObjectByName( "RRHip",true );
@@ -239,9 +265,13 @@ function frogMovement(frog)
 	var rrtmt_xvalue=[0,-0.1,-0.2,-0.1,0];
 	var rltmt_xvalue=[0,0.1,0.2,0.1,0];
 	
-    frog.position.x = interpolator(keys,x_values,t);
-	frog.position.y = interpolator(keys,y_values,t);
+	var toptest = frog.getObjectByName( "toptest",true );
+	var testbody = frog.getObjectByName( "body",true );
 	
+	
+	toptest.rotation.y=rotate;
+    testbody.position.x = interpolator(keys,x_values,t);
+	testbody.position.y = interpolator(keys,y_values,t);
 	
 	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
 	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
@@ -286,11 +316,11 @@ function frogMovement(frog)
 	
 }
 
-  function createJoint(name){
-	  name=new THREE.Object3D;
-	  name.add(createAxes(0.5));
-	  return name;
-  }
+function createJoint(name){
+	name=new THREE.Object3D;
+	name.add(createAxes(0.5));
+	return name;
+}
 function createAxes(length){
   var geometry = new THREE.Geometry();
   geometry.vertices.push(new THREE.Vector3(0, 0, 0));
@@ -600,8 +630,14 @@ function createWater(){
 }
 function createFrog(material){
 	
+	var object=createJoint(object);
+	var toptest=createJoint(toptest);
+	object.name="body";
+	toptest.name="toptest"
 	
-	body=createPentagonalBipyramid(material);
+	
+	var body=createPentagonalBipyramid(material);
+	
 	var head=createHead(material);
 	
 	var FLHip=createFLeg(0.8,0,-0.58,material);
@@ -617,11 +653,9 @@ function createFrog(material){
 
 	body.add(RRHip);
 	body.add(RLHip);
-	
-	body.position.y=1;
-	body.position.x=1;
-	body.position.z=1;
-	return body;
+	object.add(body)
+	toptest.add(object);
+	return toptest;
 
 }
 
