@@ -14,7 +14,8 @@ var bool_light=true;
 var bool_axes=true;
 var axes_num=0;
 var body;
-
+var bnum=0;
+var toesnum=0;
 init();
 
 
@@ -26,8 +27,9 @@ var evlight  = new THREE.AmbientLight(0x404040);
 
 
 material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x00ff00});
+material1 = new THREE.MeshBasicMaterial({side:THREE.DoubleSide,color : 0xff9966});
 eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000000});
-
+material.needsUpdate=true;
 var frog=createJoint(frog);
 
 frog.add(createFrog(material));
@@ -51,7 +53,8 @@ document.onkeydown = handleKeyDown;
 
 function handleKeyDown(event)
 {	var a;
-
+ 	var b=scene.getObjectByName("tbody");
+ 	
 		if(isFront)
 		{
 			if(isRight){
@@ -73,14 +76,76 @@ function handleKeyDown(event)
 		}
     switch (event.keyCode) {
     case 77:
+			
+		
         if(wireframew==0){
+			if(bool_light==true){
+				b.material=material;
+				for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material;
+			}
+			}else{
+				b.material=material1;
+				for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material1;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material1;
+				}
+			}
 			wireframew=1;
 			material.wireframe=true;
+			material1.wireframe=true;
 			eyematerial.wireframe=true;
+			
+			b.material.map=null;
+			
+			
+			
 		}else{
+			if(bool_light==true){
+				b.material=new THREE.MeshLambertMaterial({side:THREE.DoubleSide});
+				for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material;
+			}
+			}else{
+				b.material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+				for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material1;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material1;
+				}
+			}
 			wireframew=0;
 			material.wireframe=false;
+			material1.wireframe=false;
 			eyematerial.wireframe=false;
+			
+			b.material.map=new THREE.TextureLoader().load("penta.png");
+			
 		}
         break;
     case 72:
@@ -136,10 +201,45 @@ function handleKeyDown(event)
 			bool_light = false;
 			scene.remove(evlight);
 			light.visible = false;
+			if(wireframew==1){
+				b.material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide,wireframe:true,color:0xff9966});
+				
+			}else{
+				b.material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+				
+			}
+			b.material.map= new THREE.TextureLoader().load("penta.png");
+			for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material1;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material1;
+			}
 		}else{
 			bool_light = true;
 			scene.add(evlight);
 			light.visible = true;
+			if(wireframew==1){
+				b.material=new THREE.MeshLambertMaterial({side:THREE.DoubleSide,wireframe:true});
+			}else{
+				b.material=new THREE.MeshLambertMaterial({side:THREE.DoubleSide});
+			}
+			
+			b.material.map= new THREE.TextureLoader().load("penta.png");
+			for (var i = 0; i <bnum; i++) {
+				var c;
+				c=scene.getObjectByName("limb"+i);
+				c.material=material;
+			}
+			for (var i = 0; i <toesnum; i++) {
+				var d;
+				d=scene.getObjectByName("toes"+i);
+				d.material=material;
+			}
 		}
         break;
 
@@ -246,9 +346,9 @@ function createAxes(length){
   
     new THREE.Vector2(0.91,0.8), 
     new THREE.Vector2(0.91,0.2),
-	new THREE.Vector2(0.34,0.02),
+	new THREE.Vector2(0.35,0.02),
 	new THREE.Vector2(0,0.5),
-	new THREE.Vector2(0.34,0.98)
+	new THREE.Vector2(0.35,0.98)
 ];
 
 	geometry.faceVertexUvs[0][0] = [UVs[0], UVs[1], UVs[2]];
@@ -269,7 +369,9 @@ function createAxes(length){
 	
 	var loader = new THREE.TextureLoader();
 	var texture = loader.load("penta.png");
+
  	object.material.map = texture;
+	object.name="tbody";
 	object.add(createAxes(0.5));
 	return object;
 }
@@ -295,8 +397,11 @@ function createSquareBipyramid( material){
 	geometry.faces.push(new THREE.Face3(3, 5, 4));
 	
 	geometry.computeFaceNormals();
+	
 	var object = new THREE.Mesh(geometry, material); 
 	var axes=createAxes(0.5);
+	object.name = "limb"+bnum;
+	bnum++;
 	object.add(axes);
 	return object;
           
@@ -336,6 +441,7 @@ function createTorso(material){
 	lbarm.position.x=1;
 	lbarm.rotation.z=Math.PI / 4;
 	ltoes.position.x=1;
+	
 	return joint1;
  }
 function createFLeg(x,y,z,material)
@@ -509,6 +615,8 @@ function createToes(material){
 	var object = new THREE.Mesh(geometry, material); 
 	var axes=createAxes(0.5);
 	object.add(axes);
+	object.name="toes"+toesnum;
+	toesnum++;
 	return object;
 }
 
