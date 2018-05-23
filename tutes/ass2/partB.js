@@ -24,6 +24,7 @@ var clock = new THREE.Clock();
 
 var light  = new THREE.DirectionalLight(0xffffff);
 
+
 light.position.set(0, 0, 1);
 var evlight  = new THREE.AmbientLight(0x404040);
 
@@ -31,14 +32,16 @@ var evlight  = new THREE.AmbientLight(0x404040);
 material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x00ff00});
 eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000000});
 
-var frog=createJoint(frog);
+var frogModel=createJoint(frogModel);
 
-frog.add(createFrog(material));
+var frog1=new Array(new frogObject(1,1,1,1,1,1,frogModel));
+
+frog1[0].frogjoint.add(createFrog(material));
 
 scene.add(evlight);
 scene.add(light);
 
-scene.add(frog);
+scene.add(frog1[0].frogjoint);
 
 scene.add(createWater());
 
@@ -51,6 +54,17 @@ controls.addEventListener('change', render);
 animate();
 
 document.onkeydown = handleKeyDown;
+
+function frogObject(x,y,z,vx,vy,vz,frogjoint) {
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  this.vx=vx;
+  this.vy=vy;
+  this.vz=vz;
+  
+  this.frogjoint = frogjoint;
+}
 
 function handleKeyDown(event)
 {	var a;
@@ -190,7 +204,20 @@ function animate() {
 	{
 		t=0;
 	}
-	//Rear leg part
+	for(var i=0;i<frog1.length;i++)
+	{
+		frogMovement(frog1[0].frogjoint);
+	}
+
+	
+	//console.log(rrtmt.rotation.z);
+	renderer.render(scene, camera); 
+    requestAnimationFrame(animate);
+    controls.update();
+}
+function frogMovement(frog)
+{
+		//Rear leg part
 	var rrhip = frog.getObjectByName( "RRHip",true );
 	var rrhip_xvalue=[0,0.5,1,0.5,0];
 	var rrhip_yvalue=[-Math.PI/2,-Math.PI/2-0.3,-Math.PI/2-0.6,-Math.PI/2-0.3,-Math.PI/2];
@@ -214,6 +241,8 @@ function animate() {
 	
     frog.position.x = interpolator(keys,x_values,t);
 	frog.position.y = interpolator(keys,y_values,t);
+	
+	
 	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
 	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
 	
@@ -254,10 +283,7 @@ function animate() {
 	flhip.rotation.z = interpolator(keys,frhip_zvalue,t);
 	flknee.rotation.z = interpolator(keys,fknee_zvalue,t);
 	flankle.rotation.z = interpolator(keys,fankle_zvalue,t);
-	//console.log(rrtmt.rotation.z);
-	renderer.render(scene, camera); 
-    requestAnimationFrame(animate);
-    controls.update();
+	
 }
 
   function createJoint(name){
@@ -593,7 +619,8 @@ function createFrog(material){
 	body.add(RLHip);
 	
 	body.position.y=1;
-	
+	body.position.x=1;
+	body.position.z=1;
 	return body;
 
 }
