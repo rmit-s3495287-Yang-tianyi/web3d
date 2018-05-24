@@ -33,9 +33,9 @@ eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000
 
 var frogModel=createJoint(frogModel);
 
-var f1=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/2,createFrog(material));
-var f2=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/4,createFrog(material));
-var f3=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/6,createFrog(material));
+var f1=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/2,0,createFrog(material));
+var f2=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/4,0,createFrog(material));
+var f3=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/6,0,createFrog(material));
 
 var frog1=[f1,f2,f3];
 
@@ -58,7 +58,7 @@ animate();
 
 document.onkeydown = handleKeyDown;
 
-function frogObject(x,y,z,vx,vy,vz,x_values,y_values,rotate,frogjoint) {
+function frogObject(x,y,z,vx,vy,vz,x_values,y_values,rotate,selfRotate,frogjoint) {
   this.x = x;
   this.y = y;
   this.z = z;
@@ -68,7 +68,7 @@ function frogObject(x,y,z,vx,vy,vz,x_values,y_values,rotate,frogjoint) {
   this.rotate=rotate;
   this.x_values=x_values;
   this.y_values=y_values;
-  
+  this.selfRotate=0;
   this.frogjoint = frogjoint;
 }
 
@@ -226,7 +226,7 @@ function animate() {
 	{
 		
 		
-		frogMovement(frog1[i].frogjoint,frog1[i].x_values,frog1[i].y_values,frog1[i].z_values,frog1[i].rotate);
+		frogMovement(frog1[i].frogjoint,frog1[i].x_values,frog1[i].y_values,frog1[i].z_values,frog1[i].rotate,frog1[i].selfRotate);
 	}
 	
 	
@@ -252,7 +252,7 @@ function updateXYZvalue(a)
 			for(var i=0;i<frog1[a].x_values.length;i++)
 			{
 				frog1[a].x_values[i]+=8-4*i;
-				frog1[a].rotate=frog1[a].rotate+30;
+				frog1[a].selfRotate+=Math.PI;
 				flag[a][1]=1;
 			}	
 		console.log(2);
@@ -267,6 +267,7 @@ function updateXYZvalue(a)
 				for(var i=0;i<frog1[a].x_values.length;i++)
 			{
 				frog1[a].x_values[i]+=-8+4*i;
+				frog1[a].selfRotate+=Math.PI;
 				
 			}
 				flag[a][0]=0;
@@ -280,7 +281,7 @@ function updateXYZvalue(a)
 		
 	}
 }
-function frogMovement(frog,x_values,y_values,z_values,rotate)
+function frogMovement(frog,x_values,y_values,z_values,rotate,bodyrotate)
 {
 		//Rear leg part
 	var rrhip = frog.getObjectByName( "RRHip",true );
@@ -311,6 +312,7 @@ function frogMovement(frog,x_values,y_values,z_values,rotate)
 	toptest.rotation.y=rotate;
     testbody.position.x = interpolator(keys,x_values,t);
 	testbody.position.y = interpolator(keys,y_values,t);
+	testbody.rotation.y = bodyrotate;
 	
 	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
 	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
