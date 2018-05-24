@@ -16,6 +16,7 @@ var axes_num=0;
 var t=0,dt;
 var keys =[0,0.5,1,1.5,2];
 var count=1;
+var flag=[[0,0],[0,0],[0,0]];
 init();
 
 var clock = new THREE.Clock(); 
@@ -215,14 +216,16 @@ function animate() {
 	{
 		for(var i=0;i<frog1.length;i++)
 		{
-			console.log(frog1.length);
-			updateXYZvalue(frog1[i]);
+			//console.log(frog1.length);
+			updateXYZvalue(i);
 			
 		}
 		count++;
 	}
 	for(var i=0;i<frog1.length;i++)
 	{
+		
+		
 		frogMovement(frog1[i].frogjoint,frog1[i].x_values,frog1[i].y_values,frog1[i].z_values,frog1[i].rotate);
 	}
 	
@@ -233,13 +236,48 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update();
 }
-function updateXYZvalue(frog)
+function updateXYZvalue(a)
 {
-	for(var i=0;i<frog.x_values.length;i++)
-	{
-		frog.x_values[i]+=8;
-	}
+
+	if(frog1[a].x_values[4]<30 &&flag[a][0]==0){
+		for(var i=0;i<frog1[a].x_values.length;i++)
+		{
+			frog1[a].x_values[i]+=8;
 	
+		}
+		console.log(1);
+	}else{
+		flag[a][0]=1;
+		if(flag[a][1]==0){
+			for(var i=0;i<frog1[a].x_values.length;i++)
+			{
+				frog1[a].x_values[i]+=8-4*i;
+				flag[a][1]=1;
+			}	
+		console.log(2);
+		}else{
+			if(frog1[a].x_values[4]>-35){
+			for(var i=0;i<frog1[a].x_values.length;i++)
+			{
+				frog1[a].x_values[i]+=-8;
+				
+			}}
+			else{
+				for(var i=0;i<frog1[a].x_values.length;i++)
+			{
+				frog1[a].x_values[i]+=-8+4*i;
+				
+			}
+				flag[a][0]=0;
+				flag[a][1]=0;
+			}
+			console.log(3);
+		}
+		
+		
+		
+		
+	}
 }
 function frogMovement(frog,x_values,y_values,z_values,rotate)
 {
@@ -272,6 +310,7 @@ function frogMovement(frog,x_values,y_values,z_values,rotate)
 	toptest.rotation.y=rotate;
     testbody.position.x = interpolator(keys,x_values,t);
 	testbody.position.y = interpolator(keys,y_values,t);
+
 	
 	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
 	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
@@ -617,12 +656,21 @@ function createToes(material){
 
 function createWater(){
 	var geometry = new THREE.Geometry();
-	geometry.vertices.push(new THREE.Vector3(-5,-0.5 ,2));
-	geometry.vertices.push(new THREE.Vector3(5, -0.5 ,2));
-	geometry.vertices.push(new THREE.Vector3(5, -0.5 ,-2));
-	geometry.vertices.push(new THREE.Vector3(-5, -0.5 ,-2));
-	geometry.faces.push(new THREE.Face3(0,1,2));
-	geometry.faces.push(new THREE.Face3(2,3,0));
+	for(var i=0;i<360;i++){
+		var x=40*Math.cos(i);
+		var z=-40*Math.sin(i);
+		geometry.vertices.push(new THREE.Vector3(x,-1.5 ,z));
+	}
+	for(var i=0;i<358;i++){
+		geometry.faces.push(new THREE.Face3(0,i+1,i+2));
+		
+	}
+	//geometry.vertices.push(new THREE.Vector3(-5,-0.5 ,2));
+	//geometry.vertices.push(new THREE.Vector3(5, -0.5 ,2));
+	//geometry.vertices.push(new THREE.Vector3(5, -0.5 ,-2));
+	//geometry.vertices.push(new THREE.Vector3(-5, -0.5 ,-2));
+	//geometry.faces.push(new THREE.Face3(0,1,2));
+	//geometry.faces.push(new THREE.Face3(2,3,0));
 	geometry.computeFaceNormals();
 	var m= new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x0000CD});
 	var object = new THREE.Mesh(geometry, m); 
