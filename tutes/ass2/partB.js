@@ -252,6 +252,7 @@ function updateXYZvalue(a)
 			for(var i=0;i<frog1[a].x_values.length;i++)
 			{
 				frog1[a].x_values[i]+=8-4*i;
+				frog1[a].rotate=frog1[a].rotate+30;
 				flag[a][1]=1;
 			}	
 		console.log(2);
@@ -310,7 +311,6 @@ function frogMovement(frog,x_values,y_values,z_values,rotate)
 	toptest.rotation.y=rotate;
     testbody.position.x = interpolator(keys,x_values,t);
 	testbody.position.y = interpolator(keys,y_values,t);
-
 	
 	rrhip.rotation.x = interpolator(keys,rrhip_xvalue,t);
 	rrhip.rotation.y = interpolator(keys,rrhip_yvalue,t);
