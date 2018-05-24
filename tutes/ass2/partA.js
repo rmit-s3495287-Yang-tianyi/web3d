@@ -256,6 +256,7 @@ function handleKeyDown(event)
     
 }
 function hideAxes() {
+	//get all axes' name
 	for (var i = 0; i <axes_num; i++) {
 		var axe;
 		axe=scene.getObjectByName("axes"+i);
@@ -340,7 +341,7 @@ function createAxes(length){
 	geometry.faces.push(new THREE.Face3(6,4,5));
 	geometry.faces.push(new THREE.Face3(6,5,1));
 	
-	 
+	 //texture
 	var UVs = [ 
     new THREE.Vector2(0.5,0.5), 
   
@@ -548,7 +549,7 @@ function createLeg(end,material, isleft)
 	var toes;
 	toes=createToes(material);
 	toes.material.side = THREE.DoubleSide;
-	
+	//add limbs to joint
 	hip.add(upLeg);
 	hip.add(knee);
 	
