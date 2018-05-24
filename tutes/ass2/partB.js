@@ -14,9 +14,9 @@ var bool_light=true;
 var bool_axes=true;
 var axes_num=0;
 var t=0,dt;
-var keys =[0,0.5,1,1.5,2];
+var keys =[0,1,2,3,4];
 var count=1;
-var flag=[[0,0],[0,0],[0,0]];
+var flag=[[0,0],[0,0],[0,0],[0,0]];
 init();
 
 var clock = new THREE.Clock(); 
@@ -34,10 +34,10 @@ eyematerial = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0x000
 var frogModel=createJoint(frogModel);
 
 var f1=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/2,0,createFrog(material));
-var f2=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/4,0,createFrog(material));
-var f3=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/6,0,createFrog(material));
-
-var frog1=[f1,f2,f3];
+var f2=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI/7,0,createFrog(material));
+var f3=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI*6,0,createFrog(material));
+var f4=new frogObject(1,1,1,1,1,1,[-4,-2,0,2.0,4.0],[0,0.8,1.6,0.8,0],Math.PI*9,0,createFrog(material));
+var frog1=[f1,f2,f3,f4];
 
 
 scene.add(evlight);
@@ -46,6 +46,7 @@ scene.add(light);
 scene.add(frog1[0].frogjoint);
 scene.add(frog1[1].frogjoint);
 scene.add(frog1[2].frogjoint);
+scene.add(frog1[3].frogjoint);
 scene.add(createWater());
 
 scene.add(createAxes(5));
@@ -359,7 +360,7 @@ function frogMovement(frog,x_values,y_values,z_values,rotate,bodyrotate)
 
 function createJoint(name){
 	name=new THREE.Object3D;
-	name.add(createAxes(0.5));
+	//name.add(createAxes(0.5));
 	return name;
 }
 function createAxes(length){
@@ -412,9 +413,37 @@ function createAxes(length){
 	geometry.faces.push(new THREE.Face3(6,4,5));
 	geometry.faces.push(new THREE.Face3(6,5,1));
 	
+		var UVs = [ 
+    new THREE.Vector2(0.5,0.5), 
+  
+    new THREE.Vector2(0.91,0.8), 
+    new THREE.Vector2(0.91,0.2),
+	new THREE.Vector2(0.35,0.02),
+	new THREE.Vector2(0,0.5),
+	new THREE.Vector2(0.35,0.98)
+];
+
+	geometry.faceVertexUvs[0][0] = [UVs[0], UVs[1], UVs[2]];
+	geometry.faceVertexUvs[0][1] = [UVs[0], UVs[2], UVs[3]];
+	geometry.faceVertexUvs[0][2] = [UVs[0], UVs[3], UVs[4]];
+	geometry.faceVertexUvs[0][3] = [UVs[0], UVs[4], UVs[5]];
+	geometry.faceVertexUvs[0][4] = [UVs[0], UVs[5], UVs[1]];
+	 
+	geometry.faceVertexUvs[0][5] = [UVs[0], UVs[1], UVs[2]];
+	geometry.faceVertexUvs[0][6] = [UVs[0], UVs[2], UVs[3]];
+	geometry.faceVertexUvs[0][7] = [UVs[0], UVs[3], UVs[4]];
+	geometry.faceVertexUvs[0][8] = [UVs[0], UVs[4], UVs[5]];
+	geometry.faceVertexUvs[0][9] = [UVs[0], UVs[5], UVs[1]];
+	 
 	geometry.computeFaceNormals();
+	material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide,color : 0xffffff});
 	var object = new THREE.Mesh(geometry, material);
-	object.add(createAxes(0.5));
+	
+	var loader = new THREE.TextureLoader();
+	var texture = loader.load("penta.png");
+
+ 	object.material.map = texture;
+
 	return object;
 }
 
